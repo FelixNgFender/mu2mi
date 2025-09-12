@@ -1,4 +1,5 @@
 import { sql } from "drizzle-orm";
+import { env } from "@/env";
 import { base } from "../context";
 import { dbProvider, fileStorageProvider, redisProvider } from "../middleware";
 
@@ -17,7 +18,7 @@ const execute = base
       start -
       Number(databaseLatency)
     ).toFixed(2);
-    await fileStorage.bucketExists("bucket-name-of-a-non-existent-bucket");
+    await fileStorage.bucketExists(env.S3_BUCKET_NAME);
     const fileStorageLatency = (
       performance.now() -
       start -
