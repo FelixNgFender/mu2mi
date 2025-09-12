@@ -1,6 +1,6 @@
 import { os } from "@orpc/server";
 import { httpStatus } from "@/lib/http";
-import asset from "@/model/asset";
+import assetModel from "@/model/asset";
 import trackModel from "@/model/track";
 import { assetSelectSchema, trackSelectSchema } from "@/types/db/input";
 import {
@@ -356,7 +356,7 @@ const deleteUserTrack = base
     },
   })
   .handler(async ({ context, input, errors }) => {
-    const assets = await asset.findTrackAssets(context.db, input);
+    const assets = await assetModel.findTrackAssets(context.db, input);
     if (assets.some((asset) => asset.userId !== context.session.user.id)) {
       throw errors.UNAUTHORIZED();
     }
