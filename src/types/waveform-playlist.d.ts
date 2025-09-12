@@ -1,1 +1,1 @@
-declare module 'waveform-playlist';
+declare module "waveform-playlist";

@@ -38,16 +38,17 @@ Mu2Mi is an open source, AI-powered toolkit for all your musical needs. Remove v
 
 ## Features
 
--   **Music Generation**: Craft unique compositions from text or melodies.
--   **Style Remix**: Remix and reimagine a track in various music styles.
--   **Track Separation**: Isolate vocals and instruments within a track.
--   **Track Analysis**: Analyze the tempo, key, and structure of a musical piece.
--   **MIDI Transcription** : Convert audio to MIDI data.
--   **Lyrics Transcription**: Transcribe lyrics of any language from audio recordings into text and translate lyrics of any language to English.
--   **Audio Preview**: Preview audio files in the browser.
--   **MIDI Preview**: Preview MIDI files in the browser.
--   **Track Download**: Download processed tracks in a zip.
--   **Track Sharing**: Share tracks with others through a public link.
+- **Music Generation**: Craft unique compositions from text or melodies.
+- **Style Remix**: Remix and reimagine a track in various music styles.
+- **Track Separation**: Isolate vocals and instruments within a track.
+- **Track Analysis**: Analyze the tempo, key, and structure of a musical piece.
+- **MIDI Transcription** : Convert audio to MIDI data.
+- **Lyrics Transcription**: Transcribe lyrics of any language from audio
+  recordings into text and translate lyrics of any language to English.
+- **Audio Preview**: Preview audio files in the browser.
+- **MIDI Preview**: Preview MIDI files in the browser.
+- **Track Download**: Download processed tracks in a zip.
+- **Track Sharing**: Share tracks with others through a public link.
 
 ## Contributing
 
@@ -55,32 +56,38 @@ Navigate to the [contributing guide](CONTRIBUTING.md) to get started.
 
 ## Self-Hosting
 
-To self-host Mu2Mi, follow the instructions in the [self-hosting guide](SELF_HOSTING.md).
+To self-host Mu2Mi, follow the instructions in the
+[self-hosting guide](SELF_HOSTING.md).
 
 ## Credits
 
 Major thanks to the following open-source projects for making this possible:
 
--   [Next.js](https://github.com/vercel/next.js)
--   [MusicGen](https://github.com/facebookresearch/audiocraft/blob/main/docs/MUSICGEN.md)
--   [BTC](https://github.com/jayg996/BTC-ISMIR19)
--   [Demucs](https://github.com/facebookresearch/demucs)
--   [All-In-One Music Structure Analyzer](https://github.com/mir-aidj/all-in-one#all-in-one-music-structure-analyzer)
--   [PyTSMod](https://github.com/KAIST-MACLab/PyTSMod)
--   [Basic Pitch](https://github.com/spotify/basic-pitch)
--   [Whisper](https://github.com/openai/whisper)
--   [Waveform Playlist](https://github.com/naomiaro/waveform-playlist)
--   [magenta-js](https://github.com/magenta/magenta-js/tree/master/music)
+- [Next.js](https://github.com/vercel/next.js)
+- [MusicGen](https://github.com/facebookresearch/audiocraft/blob/main/docs/MUSICGEN.md)
+- [BTC](https://github.com/jayg996/BTC-ISMIR19)
+- [Demucs](https://github.com/facebookresearch/demucs)
+- [All-In-One Music Structure Analyzer](https://github.com/mir-aidj/all-in-one#all-in-one-music-structure-analyzer)
+- [PyTSMod](https://github.com/KAIST-MACLab/PyTSMod)
+- [Basic Pitch](https://github.com/spotify/basic-pitch)
+- [Whisper](https://github.com/openai/whisper)
+- [Waveform Playlist](https://github.com/naomiaro/waveform-playlist)
+- [magenta-js](https://github.com/magenta/magenta-js/tree/master/music)
 
 ## License
 
-This repository contains Mu2Mi, covered under the [MIT License](LICENSE), except where noted.
+This repository contains Mu2Mi, covered under the [MIT License](LICENSE), except
+where noted.
 
 ## Code of Conduct
 
-This project has adapted the Code of Conduct from the [Contributor Covenant](https://www.contributor-covenant.org/). For more information see the [Code of Conduct](CODE_OF_CONDUCT.md) or contact [team@mu2mi.com](mailto:team@mu2mi.com) with any additional questions or comments.
+This project has adapted the Code of Conduct from the
+[Contributor Covenant](https://www.contributor-covenant.org/). For more
+information see the [Code of Conduct](CODE_OF_CONDUCT.md) or contact
+[team@mu2mi.com](mailto:team@mu2mi.com) with any additional questions or
+comments.
 
 ## Questions
 
-For more information on how to use, develop, and self-host Mu2Mi, join our community on
-[Discord](https://discord.gg/7BkTD7RNRG).
+For more information on how to use, develop, and self-host Mu2Mi, join our
+community on [Discord](https://discord.gg/7BkTD7RNRG).

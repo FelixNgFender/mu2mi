@@ -1,270 +1,270 @@
 :root {
-    --wp-controls-border-color: hsl(var(--border));
-    --wp-controls-background-color: hsl(var(--card));
-    --wp-mute-solo-color: hsl(var(--secondary-foreground));
-    --wp-mute-solo-hover-color: hsl(var(--secondary));
-    --wp-mute-solo-focus-color: hsl(var(--secondary));
-    --wp-btn-danger-background-hover-color: hsl(var(--destructive));
-    --wp-btn-danger-border-hover-color: hsl(var(--destructive));
-    --wp-btn-danger-background-color: hsl(var(--destructive));
-    --wp-btn-danger-border-color: hsl(var(--destructive));
-    --wp-btn-danger-focus-color: hsl(var(--destructive-foreground));
-    --wp-btn-danger-color: hsl(var(--destructive-foreground));
-    --wp-btn-info-background-hover-color: hsl(var(--muted));
-    --wp-btn-info-border-hover-color: hsl(var(--muted));
-    --wp-btn-info-background-color: hsl(var(--muted));
-    --wp-btn-info-border-color: hsl(var(--muted));
-    --wp-btn-info-focus-color: hsl(var(--muted-foreground));
-    --wp-btn-info-color: hsl(var(--primary-foreground));
-    --wp-channel-color: var(--gradient);
-    --wp-channel-progress-color: hsl(var(--secondary));
-    --wp-cursor-color: hsl(var(--secondary));
-    --wp-selection-point-color: hsl(var(--primary));
-    --wp-tracks-container-background-color: hsl(var(--background));
-    --wp-range-slider-color: hsl(var(--primary));
-    --wp-range-slider-focus-color: hsl(var(--primary));
-    --wp-range-slider-background-color: hsl(var(--input));
-    --wp-range-slider-background-focus-color: hsl(var(--ring));
+  --wp-controls-border-color: hsl(var(--border));
+  --wp-controls-background-color: hsl(var(--card));
+  --wp-mute-solo-color: hsl(var(--secondary-foreground));
+  --wp-mute-solo-hover-color: hsl(var(--secondary));
+  --wp-mute-solo-focus-color: hsl(var(--secondary));
+  --wp-btn-danger-background-hover-color: hsl(var(--destructive));
+  --wp-btn-danger-border-hover-color: hsl(var(--destructive));
+  --wp-btn-danger-background-color: hsl(var(--destructive));
+  --wp-btn-danger-border-color: hsl(var(--destructive));
+  --wp-btn-danger-focus-color: hsl(var(--destructive-foreground));
+  --wp-btn-danger-color: hsl(var(--destructive-foreground));
+  --wp-btn-info-background-hover-color: hsl(var(--muted));
+  --wp-btn-info-border-hover-color: hsl(var(--muted));
+  --wp-btn-info-background-color: hsl(var(--muted));
+  --wp-btn-info-border-color: hsl(var(--muted));
+  --wp-btn-info-focus-color: hsl(var(--muted-foreground));
+  --wp-btn-info-color: hsl(var(--primary-foreground));
+  --wp-channel-color: var(--gradient);
+  --wp-channel-progress-color: hsl(var(--secondary));
+  --wp-cursor-color: hsl(var(--secondary));
+  --wp-selection-point-color: hsl(var(--primary));
+  --wp-tracks-container-background-color: hsl(var(--background));
+  --wp-range-slider-color: hsl(var(--primary));
+  --wp-range-slider-focus-color: hsl(var(--primary));
+  --wp-range-slider-background-color: hsl(var(--input));
+  --wp-range-slider-background-focus-color: hsl(var(--ring));
 }
 .playlist {
-    margin: 2em 0;
+  margin: 2em 0;
 }
 .playlist *,
 .playlist ::after,
 .playlist ::before {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 .playlist .btn:not(:disabled) {
-    cursor: pointer;
+  cursor: pointer;
 }
 .playlist .btn {
-    display: inline-block;
-    font-weight: 400;
-    text-align: center;
-    vertical-align: middle;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    background-color: transparent;
-    border: 1px solid transparent;
-    transition:
-        color 0.15s ease-in-out,
-        background-color 0.15s ease-in-out,
-        border-color 0.15s ease-in-out,
-        box-shadow 0.15s ease-in-out;
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 .playlist .btn-outline-dark {
-    color: var(--wp-mute-solo-color);
-    border-color: var(--wp-mute-solo-color);
+  color: var(--wp-mute-solo-color);
+  border-color: var(--wp-mute-solo-color);
 }
 .playlist .btn-outline-dark:hover {
-    color: var(--wp-mute-solo-hover-color);
-    background-color: var(--wp-mute-solo-color);
-    border-color: var(--wp-mute-solo-color);
+  color: var(--wp-mute-solo-hover-color);
+  background-color: var(--wp-mute-solo-color);
+  border-color: var(--wp-mute-solo-color);
 }
 .playlist .btn-outline-dark:active:focus,
 .playlist .btn-outline-dark:focus {
-    box-shadow: 0 0 0 0.1rem var(--wp-mute-solo-focus-color);
+  box-shadow: 0 0 0 0.1rem var(--wp-mute-solo-focus-color);
 }
 .playlist .btn-danger {
-    color: var(--wp-btn-danger-color);
-    background-color: var(--wp-btn-danger-background-color);
-    border-color: var(--wp-btn-danger-border-color);
+  color: var(--wp-btn-danger-color);
+  background-color: var(--wp-btn-danger-background-color);
+  border-color: var(--wp-btn-danger-border-color);
 }
 .playlist .btn-danger:hover {
-    color: var(--wp-btn-danger-color);
-    background-color: var(--wp-btn-danger-background-hover-color);
-    border-color: var(--wp-btn-danger-border-hover-color);
+  color: var(--wp-btn-danger-color);
+  background-color: var(--wp-btn-danger-background-hover-color);
+  border-color: var(--wp-btn-danger-border-hover-color);
 }
 .playlist .btn-danger:active:focus,
 .playlist .btn-danger:focus {
-    box-shadow: 0 0 0 0.1rem var(--wp-btn-danger-focus-color);
+  box-shadow: 0 0 0 0.1rem var(--wp-btn-danger-focus-color);
 }
 .playlist .btn-info {
-    color: var(--wp-btn-info-color);
-    background-color: var(--wp-btn-info-background-color);
-    border-color: var(--wp-btn-info-border-color);
+  color: var(--wp-btn-info-color);
+  background-color: var(--wp-btn-info-background-color);
+  border-color: var(--wp-btn-info-border-color);
 }
 .playlist .btn-info:hover {
-    color: var(--wp-btn-info-color);
-    background-color: var(--wp-btn-info-background-hover-color);
-    border-color: var(--wp-btn-info-border-hover-color);
+  color: var(--wp-btn-info-color);
+  background-color: var(--wp-btn-info-background-hover-color);
+  border-color: var(--wp-btn-info-border-hover-color);
 }
 .playlist .btn-info:active:focus,
 .playlist .btn-info:focus {
-    box-shadow: 0 0 0 0.1rem var(--wp-btn-info-focus-color);
+  box-shadow: 0 0 0 0.1rem var(--wp-btn-info-focus-color);
 }
 .playlist .btn-xs {
-    padding: 0.4rem 0.4rem;
-    margin: 0.2rem 0;
-    font-size: 0.875rem;
-    line-height: 0.5;
-    border-radius: 0.2rem;
+  padding: 0.4rem 0.4rem;
+  margin: 0.2rem 0;
+  font-size: 0.875rem;
+  line-height: 0.5;
+  border-radius: 0.2rem;
 }
 .playlist .btn-group {
-    margin-bottom: 0.3rem;
+  margin-bottom: 0.3rem;
 }
 .playlist .btn-group > .btn:not(:first-child) {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 .playlist .btn-group > .btn:not(:last-child) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 .playlist .playlist-time-scale {
-    height: 30px;
+  height: 30px;
 }
 .playlist .playlist-tracks {
-    background: var(--wp-tracks-container-background-color);
+  background: var(--wp-tracks-container-background-color);
 }
 .playlist .channel {
-    background: var(--wp-channel-color);
+  background: var(--wp-channel-color);
 }
 .playlist .channel-progress {
-    background: var(--wp-channel-progress-color);
+  background: var(--wp-channel-progress-color);
 }
 .playlist .cursor {
-    background: var(--wp-cursor-color);
+  background: var(--wp-cursor-color);
 }
 .playlist .state-cursor,
 .playlist .state-select {
-    cursor: text;
+  cursor: text;
 }
 .playlist .state-fadein {
-    cursor: w-resize;
+  cursor: w-resize;
 }
 .playlist .state-fadeout {
-    cursor: e-resize;
+  cursor: e-resize;
 }
 .playlist .state-shift {
-    cursor: ew-resize;
+  cursor: ew-resize;
 }
 .playlist .selection.point {
-    background: var(--wp-selection-point-color);
+  background: var(--wp-selection-point-color);
 }
 .playlist .channel-wrapper.silent .channel {
-    opacity: 0.3;
+  opacity: 0.3;
 }
 .playlist .controls {
-    background: var(--wp-controls-background-color);
-    text-align: center;
-    border: 1px solid var(--wp-controls-border-color);
+  background: var(--wp-controls-background-color);
+  text-align: center;
+  border: 1px solid var(--wp-controls-border-color);
 }
 .playlist .controls .track-header {
-    overflow: hidden;
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 0.2rem;
-    font-size: 0.875rem;
-    font-weight: 500;
+  overflow: hidden;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 .playlist .controls .track-header button {
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .fas.fa-caret-up:before {
-    content: '🔼';
-    font-style: normal;
+  content: "🔼";
+  font-style: normal;
 }
 
 .fas.fa-caret-down:before {
-    content: '🔽';
-    font-style: normal;
+  content: "🔽";
+  font-style: normal;
 }
 
 .fas.fa-times:before {
-    content: '🗑️';
-    font-style: normal;
+  content: "🗑";
+  font-style: normal;
 }
 
 .playlist .controls label {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    transform: translate(0, 0);
-    padding: 0 1rem;
-    margin-bottom: 0.2rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font: normal normal normal 14px / 1;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translate(0, 0);
+  padding: 0 1rem;
+  margin-bottom: 0.2rem;
 }
 .playlist .controls label.volume:before {
-    content: '🔈';
+  content: "🔈";
 }
 .playlist .controls label.volume:after {
-    content: '🔊';
+  content: "🔊";
 }
 .playlist .controls label.stereopan:before {
-    content: '🇱';
+  content: "🇱";
 }
 .playlist .controls label.stereopan:after {
-    content: '🇷';
+  content: "🇷";
 }
-.playlist .controls input[type='range'] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    display: inline-block;
-    width: 75%;
+.playlist .controls input[type="range"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  width: 75%;
 }
-.playlist .controls input[type='range']::-webkit-slider-runnable-track {
-    height: 5px;
-    background: var(--wp-range-slider-background-color);
-    border: none;
-    border-radius: 3px;
+.playlist .controls input[type="range"]::-webkit-slider-runnable-track {
+  height: 5px;
+  background: var(--wp-range-slider-background-color);
+  border: none;
+  border-radius: 3px;
 }
-.playlist .controls input[type='range']::-moz-range-track {
-    height: 5px;
-    background: var(--wp-range-slider-background-color);
-    border: none;
-    border-radius: 3px;
+.playlist .controls input[type="range"]::-moz-range-track {
+  height: 5px;
+  background: var(--wp-range-slider-background-color);
+  border: none;
+  border-radius: 3px;
 }
-.playlist .controls input[type='range']::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border: none;
-    height: 12px;
-    width: 12px;
-    border-radius: 50%;
-    background: var(--wp-range-slider-color);
-    margin-top: -5px;
-    cursor: ew-resize;
+.playlist .controls input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  background: var(--wp-range-slider-color);
+  margin-top: -5px;
+  cursor: ew-resize;
 }
-.playlist .controls input[type='range']::-moz-range-thumb {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border: none;
-    height: 12px;
-    width: 12px;
-    border-radius: 50%;
-    background: var(--wp-range-slider-color);
-    margin-top: -5px;
-    cursor: ew-resize;
+.playlist .controls input[type="range"]::-moz-range-thumb {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  background: var(--wp-range-slider-color);
+  margin-top: -5px;
+  cursor: ew-resize;
 }
-.playlist .controls input[type='range']:focus {
-    outline: none;
+.playlist .controls input[type="range"]:focus {
+  outline: none;
 }
-.playlist .controls input[type='range']:focus::-webkit-slider-runnable-track {
-    background: var(--wp-range-slider-background-focus-color);
+.playlist .controls input[type="range"]:focus::-webkit-slider-runnable-track {
+  background: var(--wp-range-slider-background-focus-color);
 }
-.playlist .controls input[type='range']:focus::-moz-range-track {
-    background: var(--wp-range-slider-background-focus-color);
+.playlist .controls input[type="range"]:focus::-moz-range-track {
+  background: var(--wp-range-slider-background-focus-color);
 }
-.playlist .controls input[type='range']:focus::-webkit-slider-thumb {
-    border: 2px solid var(--wp-range-slider-focus-color);
+.playlist .controls input[type="range"]:focus::-webkit-slider-thumb {
+  border: 2px solid var(--wp-range-slider-focus-color);
 }
-.playlist .controls input[type='range']:focus::-moz-range-thumb {
-    border: 2px solid var(--wp-range-slider-focus-color);
+.playlist .controls input[type="range"]:focus::-moz-range-thumb {
+  border: 2px solid var(--wp-range-slider-focus-color);
 }

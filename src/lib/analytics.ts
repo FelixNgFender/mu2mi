@@ -1,106 +1,109 @@
 export const umami = {
-    webVitals: {
-        fcp: {
-            name: 'web-vitals-fcp',
-        },
-        lcp: {
-            name: 'web-vitals-lcp',
-        },
-        cls: {
-            name: 'web-vitals-cls',
-        },
-        fid: {
-            name: 'web-vitals-fid',
-        },
-        inp: {
-            name: 'web-vitals-inp',
-        },
+  webVitals: {
+    ttfb: {
+      name: "web-vitals-ttfb",
     },
-    searchSite: {
-        name: 'search-site',
+    fcp: {
+      name: "web-vitals-fcp",
     },
-    downloadTrack: {
-        name: 'download-track',
+    lcp: {
+      name: "web-vitals-lcp",
     },
-    shareTrack: {
-        name: 'share-track',
+    cls: {
+      name: "web-vitals-cls",
     },
-    deleteTrack: {
-        name: 'delete-track',
+    fid: {
+      name: "web-vitals-fid",
     },
-    deleteAccount: {
-        name: 'delete-account',
+    inp: {
+      name: "web-vitals-inp",
     },
-    generation: {
-        init: {
-            name: 'process-track-generation-init',
-        },
-        success: {
-            name: 'process-track-generation-success',
-        },
-        failure: {
-            name: 'process-track-generation-failure',
-        },
+  },
+  searchSite: {
+    name: "search-site",
+  },
+  downloadTrack: {
+    name: "download-track",
+  },
+  shareTrack: {
+    name: "share-track",
+  },
+  deleteTrack: {
+    name: "delete-track",
+  },
+  deleteAccount: {
+    name: "delete-account",
+  },
+  generation: {
+    init: {
+      name: "process-track-generation-init",
     },
-    remix: {
-        init: {
-            name: 'process-track-remix-init',
-        },
-        success: {
-            name: 'process-track-remix-success',
-        },
-        failure: {
-            name: 'process-track-remix-failure',
-        },
+    success: {
+      name: "process-track-generation-success",
     },
-    separation: {
-        init: {
-            name: 'process-track-separation-init',
-        },
-        success: {
-            name: 'process-track-separation-success',
-        },
-        failure: {
-            name: 'process-track-separation-failure',
-        },
+    failure: {
+      name: "process-track-generation-failure",
     },
-    analysis: {
-        init: {
-            name: 'process-track-analysis-init',
-        },
-        success: {
-            name: 'process-track-analysis-success',
-        },
-        failure: {
-            name: 'process-track-analysis-failure',
-        },
+  },
+  remix: {
+    init: {
+      name: "process-track-remix-init",
     },
-    midi: {
-        init: {
-            name: 'process-track-midi-transcription-init',
-        },
-        success: {
-            name: 'process-track-midi-transcription-success',
-        },
-        failure: {
-            name: 'process-track-midi-transcription-failure',
-        },
+    success: {
+      name: "process-track-remix-success",
     },
-    lyrics: {
-        init: {
-            name: 'process-track-lyrics-transcription-init',
-        },
-        success: {
-            name: 'process-track-lyrics-transcription-success',
-        },
-        failure: {
-            name: 'process-track-lyrics-transcription-failure',
-        },
+    failure: {
+      name: "process-track-remix-failure",
     },
-    unknownError: {
-        name: 'unknown-error',
+  },
+  separation: {
+    init: {
+      name: "process-track-separation-init",
     },
-    notFound: {
-        name: 'not-found',
+    success: {
+      name: "process-track-separation-success",
     },
+    failure: {
+      name: "process-track-separation-failure",
+    },
+  },
+  analysis: {
+    init: {
+      name: "process-track-analysis-init",
+    },
+    success: {
+      name: "process-track-analysis-success",
+    },
+    failure: {
+      name: "process-track-analysis-failure",
+    },
+  },
+  midi: {
+    init: {
+      name: "process-track-midi-transcription-init",
+    },
+    success: {
+      name: "process-track-midi-transcription-success",
+    },
+    failure: {
+      name: "process-track-midi-transcription-failure",
+    },
+  },
+  lyrics: {
+    init: {
+      name: "process-track-lyrics-transcription-init",
+    },
+    success: {
+      name: "process-track-lyrics-transcription-success",
+    },
+    failure: {
+      name: "process-track-lyrics-transcription-failure",
+    },
+  },
+  unknownError: {
+    name: "unknown-error",
+  },
+  notFound: {
+    name: "not-found",
+  },
 } as const;

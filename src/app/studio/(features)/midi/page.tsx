@@ -1,19 +1,16 @@
-import { siteConfig } from '@/config/site';
+import { siteConfig } from "@/config";
+import { FeatureHeader } from "../feature-header";
+import { TrackTable } from "../track-table";
 
-import { FeatureHeader } from '../feature-header';
-import { TrackTable } from '../track-table';
-
-const MidiTranscriptionPage = async () => {
-    return (
-        <>
-            <FeatureHeader
-                title="MIDI Transcription"
-                href={siteConfig.paths.studio.newMidiTranscription}
-                ctaLabel="Upload Tracks"
-            />
-            <TrackTable filter="midiTranscriptionStatus" />
-        </>
-    );
-};
-
-export default MidiTranscriptionPage;
+export default async function MidiTranscriptionPage() {
+  return (
+    <>
+      <FeatureHeader
+        title="MIDI Transcription"
+        href={siteConfig.paths.studio.midi.new}
+        ctaLabel="Upload Tracks"
+      />
+      <TrackTable filter="midi" />
+    </>
+  );
+}

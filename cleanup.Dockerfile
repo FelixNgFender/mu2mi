@@ -1,21 +1,13 @@
-FROM node:20-alpine AS base
+FROM alpine:3.22
 
-# Install dependencies only when needed
-FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN ["npm", "pkg", "delete", "scripts.prepare"]
-# RUN [ "npm", "ci",  "--omit=dev" ]
-RUN [ "npm", "i" ]
 
-FROM base AS cleanup
-WORKDIR /app
-COPY --from=deps /app/node_modules node_modules/
-COPY package.json .
-COPY scripts scripts
-ARG ENABLE_ALPINE_PRIVATE_NETWORKING
-ENV NODE_ENV=production
-USER node
-CMD [ "node", "scripts/cron-monthly-cleanup.mjs" ]
+COPY scripts/monthly-cleanup.sql ./monthly-cleanup.sql
+
+ARG PG_VERSION='16'
+
+RUN apk add --update --no-cache postgresql${PG_VERSION}-client
+
+CMD pg_isready --dbname=$DATABASE_URL && \
+  psql --version && \
+  psql $DATABASE_URL -f ./monthly-cleanup.sql

@@ -1,7 +1,5 @@
-import { GenerationForm } from './generation-form';
+import { GenerationForm } from "./form";
 
-const NewGenerationPage = async () => {
-    return <GenerationForm />;
-};
-
-export default NewGenerationPage;
+export default function NewGenerationPage() {
+  return <GenerationForm />;
+}

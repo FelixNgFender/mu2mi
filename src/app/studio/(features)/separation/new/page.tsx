@@ -1,7 +1,5 @@
-import { SeparationForm } from './separation-form';
+import { SeparationForm } from "./form";
 
-const NewSeparationPage = async () => {
-    return <SeparationForm />;
-};
-
-export default NewSeparationPage;
+export default async function NewSeparationPage() {
+  return <SeparationForm />;
+}

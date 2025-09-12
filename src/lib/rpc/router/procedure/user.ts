@@ -1,0 +1,43 @@
+import type { RateLimiterRes } from "rate-limiter-flexible";
+import { env } from "@/env";
+import { FRESH_TRACK_PROCESSING_RATE_LIMITER_RES } from "@/lib/rate-limit";
+import { base } from "../context";
+import { rateLimitProvider, redisProvider, requiresAuth } from "../middleware";
+
+/**
+ * 10 requests from the same user in 24 hours.
+ */
+const consumeCredits = base
+  .use(requiresAuth)
+  .use(redisProvider)
+  .use(rateLimitProvider)
+  .handler(async ({ context }): Promise<RateLimiterRes> => {
+    if (env.ENABLE_RATE_LIMIT) {
+      return FRESH_TRACK_PROCESSING_RATE_LIMITER_RES;
+    }
+    return await context.rateLimit.trackProcessing.penalty(
+      context.session.user.id,
+    );
+  });
+
+const getCredits = base
+  .use(requiresAuth)
+  .use(redisProvider)
+  .use(rateLimitProvider)
+  .handler(async ({ context }): Promise<RateLimiterRes> => {
+    if (env.ENABLE_RATE_LIMIT) {
+      return FRESH_TRACK_PROCESSING_RATE_LIMITER_RES;
+    }
+    const rateLimiterRes = await context.rateLimit.trackProcessing.get(
+      context.session.user.id,
+    );
+    if (!rateLimiterRes) {
+      return FRESH_TRACK_PROCESSING_RATE_LIMITER_RES;
+    }
+    return rateLimiterRes;
+  });
+
+export default {
+  getCredits,
+  consumeCredits,
+};

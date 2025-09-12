@@ -1,36 +1,15 @@
-import { env } from '@/config/env';
-import { errorHandler } from '@/lib/error';
-import { logger } from '@/lib/logger';
-import { PHASE_PRODUCTION_BUILD } from 'next/constants';
-import { type RedisClientType, createClient } from 'redis';
-import 'server-only';
+import "server-only";
+import { createClient } from "redis";
+import { env } from "@/env";
+import { logger } from "@/lib/logger";
 
-declare global {
-    var redis: RedisClientType | undefined;
-}
+const log = logger.child({ module: "infra/redis" });
 
-let redis: RedisClientType;
+export const redis = createClient({
+  url: env.REDIS_URL,
+  // https://github.com/animir/node-rate-limiter-flexible/wiki/Redis#redis-package
+  disableOfflineQueue: true,
+}).on("error", async (error) => log.error(error, "redis client error"));
+// .on("ready", () => log.info({}, "redis client ready"));
 
-if (process.env.NODE_ENV === 'production') {
-    redis = createClient({ url: env.REDIS_URL, disableOfflineQueue: true });
-} else {
-    if (!global.redis) {
-        global.redis = createClient({
-            url: env.REDIS_URL,
-            disableOfflineQueue: true,
-        });
-    }
-
-    redis = global.redis;
-}
-
-if (process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD && !redis.isOpen) {
-    redis
-        .on('error', async (err) => {
-            await errorHandler.handleError(err);
-        })
-        .on('ready', () => logger.info('Redis Client Ready'))
-        .connect();
-}
-
-export { redis };
+redis.connect();

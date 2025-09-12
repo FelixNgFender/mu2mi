@@ -1,87 +1,155 @@
-version: '3.8'
-
 name: mu2mi
 
 services:
-    postgres:
-        image: postgres:16.1-alpine3.19
-        container_name: postgres
-        restart: unless-stopped
-        environment:
-            - PGUSER=postgres
-            - POSTGRES_PASSWORD=awesomepassword
-        volumes:
-            - postgres-data:/var/lib/postgresql/data
-        ports:
-            - '5432:5432'
-        healthcheck:
-            test: ['CMD-SHELL', 'pg_isready']
-            interval: 1s
-            timeout: 5s
-            retries: 10
+  postgres:
+    image: postgres:16.1-alpine3.19
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      - PGUSER=postgres
+      - POSTGRES_PASSWORD=awesomepassword
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
 
-    web-migration:
-        build:
-            context: .
-            dockerfile: migration.Dockerfile
-            target: migration
-        container_name: web-migration
-        restart: no
-        environment:
-            - DATABASE_URL=${DATABASE_URL}
-        depends_on:
-            postgres:
-                condition: service_healthy
-        network_mode: host
+  # web-migration:
+  #   build:
+  #     context: .
+  #     dockerfile: migration.Dockerfile
+  #     target: migration
+  #   restart: no
+  #   environment:
+  #     - DATABASE_URL=${DATABASE_URL}
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   network_mode: host
 
-    redis:
-        image: redis:7.2.4-alpine
-        container_name: redis
-        restart: unless-stopped
-        command: redis-server --save 60 1 --loglevel warning
-        volumes:
-            - redis-data:/data
-        ports:
-            - '6379:6379'
-        healthcheck:
-            test: ['CMD', 'redis-cli', 'ping']
-            interval: 1s
-            timeout: 5s
-            retries: 10
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   restart: unless-stopped
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=user@domain.com
+  #     - PGADMIN_DEFAULT_PASSWORD=SuperSecret
+  #   volumes:
+  #     - pgadmin-data:/var/lib/pgadmin/
+  #   ports:
+  #     - 5050:80
 
-    minio:
-        image: quay.io/minio/minio:RELEASE.2024-01-18T22-51-28Z
-        container_name: minio
-        restart: unless-stopped
-        command: server /data --console-address :9001
-        environment:
-            - MINIO_ROOT_USER=${S3_ACCESS_KEY}
-            - MINIO_ROOT_PASSWORD=${S3_SECRET_KEY}
-        ports:
-            - 9000:9000
-            - 9001:9001
-        volumes:
-            - minio_data:/data
-        healthcheck:
-            test: ['CMD', 'mc', 'ready', 'local']
-            interval: 1s
-            timeout: 5s
-            retries: 10
+  redis:
+    image: redis:7.2.4-alpine
+    container_name: redis
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
 
-    bucket-init:
-        image: minio/mc:RELEASE.2024-03-30T15-29-52Z.fips
-        container_name: bucket-init
-        restart: no
-        entrypoint: /bin/sh -c "/usr/bin/mc config host add minio http://minio:9000 ${S3_ACCESS_KEY} ${S3_SECRET_KEY}; /usr/bin/mc mb --ignore-existing minio/${S3_BUCKET_NAME}; /usr/bin/mc anonymous set public minio/${S3_BUCKET_NAME}; /usr/bin/mc ilm rule add --expire-days 30 minio/${S3_BUCKET_NAME}; exit 0;"
-        environment:
-            - S3_ACCESS_KEY=${S3_ACCESS_KEY}
-            - S3_SECRET_KEY=${S3_SECRET_KEY}
-            - S3_BUCKET_NAME=${S3_BUCKET_NAME}
-        depends_on:
-            minio:
-                condition: service_healthy
+  minio:
+    image: quay.io/minio/minio:RELEASE.2024-01-18T22-51-28Z
+    container_name: minio
+    restart: unless-stopped
+    command: server /data --console-address :9001
+    environment:
+      - MINIO_ROOT_USER=${S3_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${S3_SECRET_KEY}
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
+  bucket-init:
+    image: minio/mc:RELEASE.2024-03-30T15-29-52Z.fips
+    container_name: bucket-init
+    restart: no
+    entrypoint:
+      /bin/sh -c "/usr/bin/mc config host add minio http://minio:9000
+      ${S3_ACCESS_KEY} ${S3_SECRET_KEY}; /usr/bin/mc mb --ignore-existing
+      minio/${S3_BUCKET_NAME}; /usr/bin/mc anonymous set public
+      minio/${S3_BUCKET_NAME}; /usr/bin/mc ilm rule add --expire-days 30
+      minio/${S3_BUCKET_NAME}; exit 0;"
+    environment:
+      - S3_ACCESS_KEY=${S3_ACCESS_KEY}
+      - S3_SECRET_KEY=${S3_SECRET_KEY}
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
+    depends_on:
+      - minio
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    restart: always
+    ports:
+      - "16686:16686"
+      - "14268"
+      - "14250"
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    restart: always
+    ports:
+      - "9411:9411"
+
+  otel-collector:
+    image: otel/opentelemetry-collector:0.67.0
+    container_name: otel-collector
+    restart: always
+    command: ["--config=/etc/otel-collector-config.yaml", ""]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "1888:1888" # pprof extension
+      - "8888:8888" # Prometheus metrics exposed by the collector
+      - "8889:8889" # Prometheus exporter metrics
+      - "13133:13133" # health_check extension
+      - "4317:4317" # OTLP gRPC receiver
+      - "4318:4318" # OTLP HTTP receiver
+      - "55679:55679" # zpages extension
+    depends_on:
+      - jaeger
+      - zipkin
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  monthly-cleanup:
+    build:
+      context: .
+      dockerfile: cleanup.Dockerfile
+    restart: no
+    environment:
+      - DATABASE_URL=postgresql://postgres:awesomepassword@postgres:5432/postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
-    postgres-data:
-    redis-data:
-    minio_data:
+  postgres-data:
+  pgadmin-data:
+  redis-data:
+  minio_data:

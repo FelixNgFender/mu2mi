@@ -1,13 +1,11 @@
 type LyricsLayoutProps = {
-    children: React.ReactNode;
+  children: React.ReactNode;
 };
 
-const LyricsLayout = ({ children }: LyricsLayoutProps) => {
-    return (
-        <section className="container relative flex h-full max-w-screen-lg flex-col space-y-4 py-4">
-            {children}
-        </section>
-    );
-};
-
-export default LyricsLayout;
+export default function LyricsLayout({ children }: LyricsLayoutProps) {
+  return (
+    <section className="container relative flex h-full max-w-(--breakpoint-lg) flex-col gap-4 py-4">
+      {children}
+    </section>
+  );
+}

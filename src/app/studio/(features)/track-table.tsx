@@ -1,75 +1,42 @@
-'use client';
+"use client";
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { DataTable } from '@/components/ui/data-table';
-import { siteConfig } from '@/config/site';
-import { TrackStatusColumn } from '@/types/studio';
-import { useQuery } from '@tanstack/react-query';
-import { AlertTriangle } from 'lucide-react';
-import { usePathname } from 'next/navigation';
-
-import { pollUserTracks } from '../actions';
-import { trackTableColumnsBuiler } from './track-table-columns';
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
+import { DataTable } from "@/components/ui/data-table";
+import { siteConfig } from "@/config";
+import { browserClient } from "@/lib/rpc";
+import type { TrackType } from "@/types/db/schema";
+import { trackTableColumnsBuiler } from "./track-table-columns";
 
 const previewPathMap: Record<string, string> = {
-    [siteConfig.paths.studio.musicGeneration]:
-        siteConfig.paths.studio.preview.track,
-    // [siteConfig.paths.studio.styleRemix]: siteConfig.paths.studio.preview.track,
-    [siteConfig.paths.studio.trackSeparation]:
-        siteConfig.paths.studio.preview.track,
-    [siteConfig.paths.studio.trackAnalysis]:
-        siteConfig.paths.studio.preview.track,
-    [siteConfig.paths.studio.midiTranscription]:
-        siteConfig.paths.studio.preview.midi,
-    [siteConfig.paths.studio.lyricsTranscription]:
-        siteConfig.paths.studio.preview.karaoke,
+  [siteConfig.paths.studio.generation.home]:
+    siteConfig.paths.studio.preview.track.template,
+  [siteConfig.paths.studio.separation.home]:
+    siteConfig.paths.studio.preview.track.template,
+  [siteConfig.paths.studio.analysis.home]:
+    siteConfig.paths.studio.preview.track.template,
+  [siteConfig.paths.studio.midi.home]:
+    siteConfig.paths.studio.preview.midi.template,
+  [siteConfig.paths.studio.lyrics.home]:
+    siteConfig.paths.studio.preview.karaoke.template,
 };
 
 type TrackTableProps = {
-    filter: TrackStatusColumn;
+  filter: TrackType;
 };
 
-export const TrackTable = ({ filter }: TrackTableProps) => {
-    const pathname = usePathname();
-    const {
-        isPending,
-        isError,
-        data: tracks,
-        error,
-    } = useQuery({
-        queryKey: ['polling-tracks'],
-        queryFn: async () => {
-            const { data, serverError } = await pollUserTracks({});
-            if (serverError || !data) {
-                throw new Error(serverError);
-            }
-            return data;
-        },
-        refetchInterval: 3000,
-    });
+export function TrackTable({ filter }: TrackTableProps) {
+  const pathname = usePathname();
+  const { data } = useSuspenseQuery(
+    browserClient.track.findUserTracks.queryOptions({
+      refetchInterval: 3000,
+    }),
+  );
 
-    if (isPending) {
-        return null;
-    }
-
-    if (isError) {
-        return (
-            <Alert variant="destructive">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{error.message}</AlertDescription>
-            </Alert>
-        );
-    }
-
-    return (
-        <DataTable
-            columns={trackTableColumnsBuiler(
-                filter,
-                previewPathMap[pathname],
-                pathname,
-            )}
-            data={tracks.filter((track) => track[filter])}
-        />
-    );
-};
+  return (
+    <DataTable
+      columns={trackTableColumnsBuiler(previewPathMap[pathname], pathname)}
+      data={data.filter((track) => track.type === filter)}
+    />
+  );
+}

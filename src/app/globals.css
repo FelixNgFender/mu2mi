@@ -1,83 +1,200 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
 
-@layer base {
-    :root {
-        --gradient: linear-gradient(to top left, #603813, #b29f94);
-        --background: 31 98.35% 98.46%;
-        --foreground: 31 6.7% 0.92%;
+@custom-variant dark (&:is(.dark *));
 
-        --muted: 31 6.7% 92.3%;
-        --muted-foreground: 31 3.35% 42.3%;
+@theme inline {
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-caret-blink: caret-blink 1.25s ease-out infinite;
+  --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
+  --animate-gradient: gradient 6s ease infinite alternate;
 
-        --popover: 31 36.4% 92.3%;
-        --popover-foreground: 31 6.7% 1.1500000000000001%;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
 
-        --card: 31 36.4% 92.3%;
-        --card-foreground: 31 6.7% 1.1500000000000001%;
+:root {
+  --gradient: linear-gradient(to top left, #603813, #b29f94);
+  --background: oklch(0.9943 0.0597 35.1119);
+  --foreground: oklch(0.0901 0.0074 63.6546);
+  --muted: oklch(0.945 0.0532 11.7102);
+  --muted-foreground: oklch(0.5358 0.0439 61.3049);
+  --popover: oklch(0.9498 0.0762 60.0699);
+  --popover-foreground: oklch(0.097 0.008 63.6546);
+  --card: oklch(0.9498 0.0762 60.0699);
+  --card-foreground: oklch(0.097 0.008 63.6546);
+  --border: oklch(0.928 0.0541 29.8782);
+  --input: oklch(0.928 0.0541 29.8782);
+  --primary: oklch(0.4091 0.561 103.3356);
+  --primary-foreground: oklch(0.9442 0.0547 0.9442);
+  --secondary: oklch(0.9739 0.0563 1.4725);
+  --secondary-foreground: oklch(0.2434 0.0224 66.8136);
+  --accent: oklch(0.9739 0.0563 1.4725);
+  --accent-foreground: oklch(0.2434 0.0224 66.8136);
+  --destructive: oklch(0.664 0.8108 80.0944);
+  --destructive-foreground: oklch(0.9878 0.0579 358.3742);
+  --ring: oklch(0.4091 0.561 103.3356);
+  --radius: 0.5rem;
 
-        --border: 31 11.7% 89.92%;
-        --input: 31 11.7% 89.92%;
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
 
-        --primary: 31 67% 23%;
-        --primary-foreground: 31 1.34% 92.3%;
+.dark {
+  --gradient: linear-gradient(to top left, #833ab4, #fd1d1d, #fcb045);
+  --background: oklch(0.1697 0.028 116.33);
+  --foreground: oklch(0.9824 0.0017 114.1);
 
-        --secondary: 31 3.35% 96.15%;
-        --secondary-foreground: 31 5.0200000000000005% 12.3%;
+  --muted: oklch(0.3304 0.0588 117.67);
+  --muted-foreground: oklch(0.6692 0.0331 114.98);
 
-        --accent: 31 3.35% 96.15%;
-        --accent-foreground: 31 5.0200000000000005% 12.3%;
+  --popover: oklch(0.2017 0.0275 116.67);
+  --popover-foreground: oklch(0.9824 0.0017 114.1);
 
-        --destructive: 0 84.2% 60.2%;
-        --destructive-foreground: 0 0% 98%;
+  --card: oklch(0.2017 0.0275 116.67);
+  --card-foreground: oklch(0.9824 0.0017 114.1);
 
-        --ring: 31 67% 23%;
+  --border: oklch(0.3304 0.0588 117.67);
+  --input: oklch(0.3304 0.0588 117.67);
 
-        --radius: 0.5rem;
-    }
+  --primary: oklch(0.9364 0.22495942368639807 121.12208048694295);
+  --primary-foreground: oklch(0.1623 0.0053 114.67);
 
-    .dark {
-        --gradient: linear-gradient(to top left, #833ab4, #fd1d1d, #fcb045);
+  --secondary: oklch(0.3304 0.0588 117.67);
+  --secondary-foreground: oklch(0.9824 0.0017 114.1);
 
-        --background: 70 65% 4%;
-        --foreground: 70 10% 97.5%;
+  --accent: oklch(0.3304 0.0588 117.67);
+  --accent-foreground: oklch(0.9824 0.0017 114.1);
 
-        --muted: 70 50% 15%;
-        --muted-foreground: 70 10% 55%;
+  --destructive: oklch(0.3959 0.1331 25.72);
+  --destructive-foreground: oklch(0.9824 0.0017 114.1);
 
-        --popover: 70 45% 6.5%;
-        --popover-foreground: 70 10% 97.5%;
+  --ring: oklch(0.9364 0.22495942368639807 121.12208048694295);
 
-        --card: 70 45% 6.5%;
-        --card-foreground: 70 10% 97.5%;
+  --radius: 0.5rem;
 
-        --border: 70 50% 15%;
-        --input: 70 50% 15%;
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
 
-        --primary: 70 100% 50%;
-        --primary-foreground: 70 10% 5%;
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 
-        --secondary: 70 50% 15%;
-        --secondary-foreground: 70 10% 97.5%;
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
 
-        --accent: 70 50% 15%;
-        --accent-foreground: 70 10% 97.5%;
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
 
-        --destructive: 0 62.8% 30.6%;
-        --destructive-foreground: 70 10% 97.5%;
+@keyframes spotlight {
+  0% {
+    opacity: 0;
+    transform: translate(-72%, -62%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -40%) scale(1);
+  }
+}
 
-        --ring: 70 100% 50%;
-    }
+@keyframes caret-blink {
+  0%,
+  70%,
+  100% {
+    opacity: 1;
+  }
+  20%,
+  50% {
+    opacity: 0;
+  }
 }
 
 @layer base {
-    * {
-        @apply border-border;
-    }
-    body {
-        @apply bg-background text-foreground;
-    }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 /*
@@ -85,17 +202,23 @@
     https://github.com/tailwindlabs/tailwindcss/pull/5732
 */
 @layer utilities {
-    .bg-gradient {
-        background: var(--gradient);
-    }
+  .bg-gradient {
+    background: var(--gradient);
+  }
 
-    /* Chrome, Safari and Opera */
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
-    .no-scrollbar {
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
-    }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+/* https://tailwindcss.com/docs/upgrade-guide#container-configuration */
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
 }

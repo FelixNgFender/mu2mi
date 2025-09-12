@@ -1,11 +1,7 @@
-import { withErrorHandling } from '@/lib/error';
-import { TrackSeparationWebhookBody } from '@/types/replicate';
+import type { NextRequest } from "next/server";
+import type { SeparationWebhookBody } from "@/types/replicate/output";
+import { replicateWebhookHandler } from "../replicate";
 
-import { replicateWebhookHandler } from '../replicate';
-
-export const POST = withErrorHandling(async (req: Request) => {
-    return await replicateWebhookHandler<TrackSeparationWebhookBody>(
-        req,
-        'trackSeparationStatus',
-    );
-});
+export async function POST(request: NextRequest) {
+  return await replicateWebhookHandler<SeparationWebhookBody>(request);
+}

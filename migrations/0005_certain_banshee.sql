@@ -1,0 +1,1 @@
+ALTER TABLE "account" DROP COLUMN "provider_user_id";

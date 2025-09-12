@@ -1,51 +1,25 @@
-import { downloadPublicTrackAssets } from '@/app/studio/queries';
-import { formatValidationErrors } from '@/lib/utils';
-import { Loader2 } from 'lucide-react';
-import dynamic from 'next/dynamic';
+import MidiPlayerWrapper from "@/app/midi-player-wrapper";
+import type { siteConfig } from "@/config";
+import { client } from "@/lib/rpc";
 
-const MidiPlayer = dynamic(() => import('@/app/midi-player'), {
-    ssr: false,
-    loading: () => (
-        <div className="flex h-full w-full flex-col items-center justify-center space-y-2">
-            <Loader2 className="h-8 w-8 animate-spin" />
-            <span className="text-sm text-muted-foreground">
-                Loading preview...
-            </span>
-        </div>
-    ),
-});
+export default async function MidiTrackPage({
+  params,
+}: PageProps<typeof siteConfig.paths.preview.midi.home>) {
+  const trackId = Number.parseInt((await params).id, 10);
 
-type MidiTrackPageProps = {
-    params: {
-        id: string;
-    };
-};
-
-const MidiTrackPage = async ({ params }: MidiTrackPageProps) => {
-    const trackId = params.id;
-
-    const {
-        data: assetLinks,
-        validationErrors,
-        serverError,
-    } = await downloadPublicTrackAssets({
-        trackId,
+  const { error, data: assetLinks } =
+    await client.asset.downloadPublicTrackAssets({
+      id: trackId,
     });
 
-    if (validationErrors) {
-        throw new Error(formatValidationErrors(validationErrors));
-    }
+  if (error) {
+    throw error;
+  }
 
-    if (serverError || !assetLinks) {
-        throw new Error(serverError);
-    }
-
-    return (
-        <MidiPlayer
-            initialURL={assetLinks.find((a) => a.type === 'midi')?.url}
-            isPublic
-        />
-    );
-};
-
-export default MidiTrackPage;
+  return (
+    <MidiPlayerWrapper
+      initialURL={assetLinks.find((a) => a.type === "midi")?.url}
+      isPublic
+    />
+  );
+}

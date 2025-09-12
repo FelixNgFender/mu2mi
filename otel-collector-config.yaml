@@ -1,40 +1,44 @@
 receivers:
-    otlp:
-        protocols:
-            grpc:
-            http:
+  otlp:
+    protocols:
+      grpc:
+      http:
 
 exporters:
-    prometheus:
-        endpoint: '0.0.0.0:8889'
-        const_labels:
-            label1: value1
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    const_labels:
+      label1: value1
 
-    logging:
+  logging:
 
-    jaeger:
-        endpoint: jaeger-all-in-one:14250
-        tls:
-            insecure: true
+  zipkin:
+    endpoint: "http://zipkin:9411/api/v2/spans"
+    format: proto
+
+  jaeger:
+    endpoint: jaeger:14250
+    tls:
+      insecure: true
 
 processors:
-    batch:
+  batch:
 
 extensions:
-    health_check:
-    pprof:
-        endpoint: :1888
-    zpages:
-        endpoint: :55679
+  health_check:
+  pprof:
+    endpoint: :1888
+  zpages:
+    endpoint: :55679
 
 service:
-    extensions: [pprof, zpages, health_check]
-    pipelines:
-        traces:
-            receivers: [otlp]
-            processors: [batch]
-            exporters: [logging, jaeger]
-        metrics:
-            receivers: [otlp]
-            processors: [batch]
-            exporters: [logging, prometheus]
+  extensions: [pprof, zpages, health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging, zipkin, jaeger]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging, prometheus]

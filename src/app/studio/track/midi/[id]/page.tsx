@@ -1,65 +1,38 @@
-import { downloadUserTrackAssets } from '@/app/studio/queries';
-import { Skeleton } from '@/components/ui/skeleton';
-import { siteConfig } from '@/config/site';
-import { httpStatus } from '@/lib/http';
-import { formatValidationErrors } from '@/lib/utils';
-import dynamic from 'next/dynamic';
+import type { Route } from "next";
+import MidiPlayerWrapper from "@/app/midi-player-wrapper";
+import { siteConfig } from "@/config";
+import { httpStatus } from "@/lib/http";
+import { client } from "@/lib/rpc";
 
-const MidiPlayer = dynamic(() => import('@/app/midi-player'), {
-    ssr: false,
-    loading: () => (
-        <div className="flex h-full flex-col space-y-8 pb-4">
-            <div className="my-1 flex justify-between space-x-2">
-                <Skeleton className="h-full w-32 max-w-full" />
-                <Skeleton className="h-10 w-80" />
-                <div />
-            </div>
-            <div className="flex flex-1 flex-col">
-                <Skeleton className="w-full flex-1" />
-            </div>
-        </div>
-    ),
-});
+const VALID_CALLBACKS = [siteConfig.paths.studio.midi.home];
 
-const validCallbacks = [siteConfig.paths.studio.midiTranscription];
+export default async function MidiTrackPage({
+  params,
+  searchParams,
+}: PageProps<typeof siteConfig.paths.studio.preview.midi.home>) {
+  const trackId = Number.parseInt((await params).id, 10);
+  const { callback } = await searchParams;
 
-type MidiTrackPageProps = {
-    params: {
-        id: string;
-    };
-    searchParams: { callback?: string };
-};
+  if (
+    typeof callback !== "string" ||
+    !(VALID_CALLBACKS as string[]).includes(callback)
+  ) {
+    throw new Error(httpStatus.clientError.badRequest.humanMessage);
+  }
 
-const MidiTrackPage = async ({ params, searchParams }: MidiTrackPageProps) => {
-    const trackId = params.id;
-    const callback = searchParams.callback;
-
-    if (callback && !(validCallbacks as string[]).includes(callback)) {
-        throw new Error(httpStatus.clientError.badRequest.humanMessage);
-    }
-
-    const {
-        data: assetLinks,
-        validationErrors,
-        serverError,
-    } = await downloadUserTrackAssets({
-        trackId,
+  const { data: assetLinks, error } =
+    await client.asset.downloadUserTrackAssets({
+      id: trackId,
     });
 
-    if (validationErrors) {
-        throw new Error(formatValidationErrors(validationErrors));
-    }
+  if (error) {
+    throw error;
+  }
 
-    if (serverError || !assetLinks) {
-        throw new Error(serverError);
-    }
-
-    return (
-        <MidiPlayer
-            initialURL={assetLinks.find((a) => a.type === 'midi')?.url}
-            callback={callback ? callback : undefined}
-        />
-    );
-};
-
-export default MidiTrackPage;
+  return (
+    <MidiPlayerWrapper
+      initialURL={assetLinks.find((a) => a.type === "midi")?.url}
+      callback={callback as Route}
+    />
+  );
+}

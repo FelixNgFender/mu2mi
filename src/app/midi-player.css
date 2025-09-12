@@ -1,13 +1,13 @@
 svg rect.note {
-    fill: rgb(
-        calc(var(--midi-velocity) * 1.2 + 100),
-        30,
-        calc(255 - var(--midi-velocity))
-    );
+  fill: rgb(
+    calc(var(--midi-velocity) * 1.2 + 100),
+    30,
+    calc(255 - var(--midi-velocity))
+  );
 }
 
 svg rect.note.active {
-    stroke: hsl(var(--ring));
-    stroke-width: 2;
-    stroke-opacity: 0.8;
+  stroke: hsl(var(--ring));
+  stroke-width: 2;
+  stroke-opacity: 0.8;
 }

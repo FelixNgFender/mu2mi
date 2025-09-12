@@ -1,14 +1,13 @@
-import type { Config } from 'drizzle-kit';
+import "dotenv/config";
 
-export default {
-    schema: './src/infra/schema.ts',
-    out: './migrations',
-    driver: 'pg', // 'pg' | 'mysql2' | 'better-sqlite' | 'libsql' | 'turso'
-    dbCredentials: {
-        // we don't use app-wide `env` here because of it meant to be
-        // run script-wise
-        connectionString: process.env.DATABASE_URL as string,
-    },
-    verbose: true,
-    strict: true,
-} satisfies Config;
+import { defineConfig } from "drizzle-kit";
+
+export default defineConfig({
+  schema: "./src/types/db/schema.ts",
+  out: "./migrations",
+  dialect: "postgresql",
+  dbCredentials: {
+    url: process.env.DATABASE_URL as string,
+  },
+  casing: "snake_case",
+});

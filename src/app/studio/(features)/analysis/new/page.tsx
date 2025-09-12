@@ -1,7 +1,5 @@
-import { AnalysisForm } from './analysis-form';
+import { AnalysisForm } from "./form";
 
-const NewAnalysisPage = async () => {
-    return <AnalysisForm />;
-};
-
-export default NewAnalysisPage;
+export default async function NewAnalysisPage() {
+  return <AnalysisForm />;
+}

@@ -1,238 +1,190 @@
-import { env } from '@/config/env';
-import { fileStorage } from '@/infra';
-import { AppError } from '@/lib/error';
-import { HttpResponse } from '@/lib/response';
-import { generateObjectKey } from '@/lib/utils';
-import { createOne as createOneAsset } from '@/models/asset';
-import {
-    findOne as findOneTrack,
-    updateOne as updateOneTrack,
-} from '@/models/track';
-import {
-    ReplicateWebhookBodyTypes,
-    webhookMetadataSchema,
-} from '@/types/replicate';
-import { TrackAssetType, TrackStatusColumn } from '@/types/studio';
-import crypto from 'crypto';
-import { headers } from 'next/headers';
-import path from 'path';
+import path from "node:path";
+import type { NextRequest } from "next/server";
+import { validateWebhook } from "replicate";
+import z from "zod";
+import { env } from "@/env";
+import { logger } from "@/lib/logger";
+import { badRequest, success, unauthorized } from "@/lib/response";
+import { client } from "@/lib/rpc";
+import { generateObjectKey } from "@/lib/utils";
+import type { AssetType, MimeType } from "@/types/db/schema";
+import { webhookMetadataSchema } from "@/types/replicate/input";
+import type { ReplicateWebhookBodyTypes } from "@/types/replicate/output";
+
+const log = logger.child({ module: "app/api/webhook/replicate" });
 
 export const replicateWebhookHandler = async <
-    T extends ReplicateWebhookBodyTypes,
+  T extends ReplicateWebhookBodyTypes,
 >(
-    req: Request,
-    statusField: TrackStatusColumn,
-    trackType?: TrackAssetType,
+  request: NextRequest,
+  trackType?: AssetType,
 ) => {
-    // https://replicate.com/docs/webhooks#verifying-webhooks
-    const body = await req.json();
-    const headersList = headers();
-    const webhookId = headersList.get('webhook-id');
-    const webhookTimestamp = headersList.get('webhook-timestamp');
-    const webhookSignatures = headersList.get('webhook-signature');
-    const signedContent = `${webhookId}.${webhookTimestamp}.${JSON.stringify(
-        body,
-    )}`;
+  // https://replicate.com/docs/webhooks#verifying-webhooks
+  const webhookIsValid = await validateWebhook(
+    request.clone(),
+    env.REPLICATE_WEBHOOK_SECRET,
+  );
+  if (!webhookIsValid) {
+    log.warn({}, "invalid webhook signature");
+    return unauthorized();
+  }
 
-    if (
-        !webhookId ||
-        !webhookTimestamp ||
-        !webhookSignatures ||
-        !signedContent
-    ) {
-        return HttpResponse.badRequest('Missing required headers');
+  const body = await request.json();
+  const searchParams = request.nextUrl.searchParams;
+  const parsedParams = webhookMetadataSchema.safeParse(
+    Object.fromEntries(searchParams),
+  );
+
+  if (!parsedParams.success) {
+    log.warn({ searchParams }, "invalid webhook metadata");
+    return badRequest(z.treeifyError(parsedParams.error));
+  }
+
+  const { trackId, userId } = parsedParams.data;
+  // TODO: zod
+  const { status, output, error } = body as T;
+
+  if (error) {
+    const { error: updateTrackError } = await client.track.update({
+      trackId,
+      status: "failed",
+    });
+    if (updateTrackError) {
+      log.error(updateTrackError, "unknown error while updating track");
     }
+    log.error({ error }, "track processing failed with error");
+    return success();
+  }
 
-    const secretBytes = Buffer.from(
-        // @ts-expect-error - Replicate webhook signing key should have base64 portion after _
-        env.REPLICATE_WEBHOOK_SECRET.split('_')[1],
-        'base64',
-    );
-    const computedSignature = crypto
-        .createHmac('sha256', secretBytes)
-        .update(signedContent)
-        .digest('base64');
-    const expectedSignatures = webhookSignatures
-        .split(' ')
-        .map((sig) => sig.split(',')[1]);
-    if (
-        !expectedSignatures.some(
-            (expectedSignature) => expectedSignature === computedSignature,
-        )
-    ) {
-        return HttpResponse.badRequest('Invalid signature');
+  const { error: findTrackError, data: track } = await client.track.find({
+    id: trackId,
+  });
+  if (findTrackError) {
+    log.error(findTrackError, "failed to find track with unknown error");
+    return success();
+  }
+
+  if (!track) {
+    log.error({}, "failed to find track");
+    return success();
+  }
+
+  if (track.status === "succeeded" || status === "starting") {
+    return success();
+  }
+
+  if (
+    track.status === "processing" &&
+    (status === "failed" || status === "canceled")
+  ) {
+    const { error: updateTrackError } = await client.track.update({
+      trackId,
+      status,
+    });
+    if (updateTrackError) {
+      log.error(updateTrackError, "unknown error while updating track");
     }
+    log.error({ status }, "error while processing track");
+    return success();
+  }
 
-    const tolerance = 5 * 60 * 1000; // 5 minutes tolerance
-    const currentTimestamp = Math.floor(Date.now() / 1000); // current timestamp in seconds
-    const webhookTimestampSeconds = parseInt(webhookTimestamp);
-
-    if (Math.abs(currentTimestamp - webhookTimestampSeconds) > tolerance) {
-        return HttpResponse.badRequest('Timestamp out of tolerance');
+  if (track.status === "processing" && status === "succeeded" && output) {
+    if (typeof output === "string") {
+      await saveAssetAndMetadata(trackId, userId, output, trackType);
+    } else if (Array.isArray(output)) {
+      await Promise.all(
+        output.map(async (url) => {
+          if (url) {
+            const extension = path.extname(url);
+            switch (extension) {
+              case ".json": {
+                await saveAssetAndMetadata(trackId, userId, url, "analysis");
+                break;
+              }
+              case ".png": {
+                await saveAssetAndMetadata(
+                  trackId,
+                  userId,
+                  url,
+                  "analysis_viz",
+                );
+                break;
+              }
+              case ".mp3": {
+                await saveAssetAndMetadata(
+                  trackId,
+                  userId,
+                  url,
+                  "analysis_sonic",
+                );
+                break;
+              }
+            }
+          }
+        }),
+      );
+    } else if (typeof output === "object" && "other" in output) {
+      await Promise.all(
+        Object.entries(output).map(async ([stem, url]) => {
+          if (url && typeof url === "string") {
+            await saveAssetAndMetadata(trackId, userId, url, stem as AssetType);
+          }
+        }),
+      );
+    } else {
+      await saveAssetAndMetadata(trackId, userId, output, "lyrics");
     }
-
-    const searchParams = new URL(req.url).searchParams;
-    const parsedParams = webhookMetadataSchema.safeParse(
-        Object.fromEntries(searchParams),
-    );
-
-    if (!parsedParams.success) {
-        return HttpResponse.badRequest(parsedParams.error.format());
+    const { error: updateTrackError } = await client.track.update({
+      trackId,
+      status,
+    });
+    if (updateTrackError) {
+      log.error(updateTrackError, "unknown error while updating track");
     }
-
-    const { taskId, userId } = parsedParams.data;
-    const { status, output, error } = body as T;
-
-    if (error) {
-        await updateOneTrack(taskId, {
-            [statusField]: 'failed',
-        });
-        return HttpResponse.success();
-    }
-
-    const track = await findOneTrack(taskId);
-    if (!track) {
-        throw new AppError('FatalError', 'Failed to find track', true);
-    }
-
-    if (track[statusField] === 'succeeded' || status === 'starting') {
-        return HttpResponse.success();
-    }
-
-    if (
-        track[statusField] === 'processing' &&
-        (status === 'failed' || status === 'canceled')
-    ) {
-        await updateOneTrack(taskId, {
-            [statusField]: status,
-        });
-        return HttpResponse.success();
-    }
-
-    if (
-        track[statusField] === 'processing' &&
-        status === 'succeeded' &&
-        output
-    ) {
-        if (typeof output === 'string') {
-            await saveTrackAssetAndMetadata(taskId, userId, output, trackType);
-        } else if (
-            statusField === 'styleRemixStatus' &&
-            Array.isArray(output)
-        ) {
-            await Promise.all(
-                output.map(async (url) => {
-                    if (url) {
-                        await saveTrackAssetAndMetadata(
-                            taskId,
-                            userId,
-                            url,
-                            'remix',
-                        );
-                    }
-                }),
-            );
-        } else if (
-            statusField === 'trackSeparationStatus' &&
-            typeof output === 'object'
-        ) {
-            await Promise.all(
-                Object.entries(output).map(async ([stem, url]) => {
-                    if (url && typeof url === 'string') {
-                        await saveTrackAssetAndMetadata(
-                            taskId,
-                            userId,
-                            url,
-                            stem === 'other' ? 'accompaniment' : (stem as any),
-                        );
-                    }
-                }),
-            );
-        } else if (
-            statusField === 'trackAnalysisStatus' &&
-            Array.isArray(output)
-        ) {
-            await Promise.all(
-                output.map(async (url) => {
-                    if (url) {
-                        const extension = path.extname(url);
-                        switch (extension) {
-                            case '.json': {
-                                await saveTrackAssetAndMetadata(
-                                    taskId,
-                                    userId,
-                                    url,
-                                    'analysis',
-                                );
-                                break;
-                            }
-                            case '.png': {
-                                await saveTrackAssetAndMetadata(
-                                    taskId,
-                                    userId,
-                                    url,
-                                    'analysis_viz',
-                                );
-                                break;
-                            }
-                            case '.mp3': {
-                                await saveTrackAssetAndMetadata(
-                                    taskId,
-                                    userId,
-                                    url,
-                                    'analysis_sonic',
-                                );
-                                break;
-                            }
-                        }
-                    }
-                }),
-            );
-        } else if (
-            statusField === 'lyricsTranscriptionStatus' &&
-            typeof output === 'object'
-        ) {
-            await saveTrackAssetAndMetadata(taskId, userId, output, 'lyrics');
-        }
-        await updateOneTrack(taskId, {
-            [statusField]: status,
-        });
-    }
-    return HttpResponse.success();
+  }
+  log.info({ trackId, status }, "track processing update");
+  return success();
 };
 
-const saveTrackAssetAndMetadata = async (
-    taskId: string,
-    userId: string,
-    data: string | Record<string, any>,
-    trackType?: TrackAssetType,
+const saveAssetAndMetadata = async (
+  trackId: number,
+  userId: string,
+  data: string | Record<string, unknown>,
+  trackType?: AssetType,
 ) => {
-    let objectName: string;
-    let mimeType: string;
-    let fileData: Buffer;
+  let objectName: string;
+  let mimeType: string;
+  let fileData: Buffer;
 
-    if (typeof data === 'string') {
-        const blob = await fetch(data).then((res) => res.blob());
-        objectName = generateObjectKey(path.extname(data));
-        mimeType = blob.type === '' ? 'application/octet-stream' : blob.type;
-        fileData = Buffer.from(await blob.arrayBuffer());
-    } else {
-        objectName = generateObjectKey('.json');
-        mimeType = 'application/json';
-        fileData = Buffer.from(JSON.stringify(data));
-    }
+  if (typeof data === "string") {
+    const blob = await fetch(data).then((res) => res.blob());
+    objectName = generateObjectKey(path.extname(data));
+    mimeType = blob.type === "" ? "application/octet-stream" : blob.type;
+    fileData = Buffer.from(await blob.arrayBuffer());
+  } else {
+    objectName = generateObjectKey(".json");
+    mimeType = "application/json";
+    fileData = Buffer.from(JSON.stringify(data));
+  }
 
-    await fileStorage.putObject(env.S3_BUCKET_NAME, objectName, fileData, {
-        'Content-Type': mimeType,
-    });
-    const newAsset = await createOneAsset({
-        userId,
-        name: objectName,
-        mimeType: mimeType as any,
-        trackId: taskId,
-        type: trackType,
-    });
-    if (!newAsset) {
-        throw new AppError('FatalError', 'Failed to create asset', true);
-    }
+  const { error } = await client.asset.uploadToFileStorage({
+    objectName,
+    fileData,
+    length: fileData.length,
+    mimeType,
+  });
+  if (error) {
+    log.error(error, "failed to upload file to file storage");
+  }
+
+  const { error: createAssetError } = await client.asset.create({
+    userId,
+    name: objectName,
+    mimeType: mimeType as MimeType,
+    trackId,
+    type: trackType,
+  });
+  if (createAssetError) {
+    log.error(createAssetError, "failed to create asset in database");
+  }
 };

@@ -1,7 +1,5 @@
-import { LyricsForm } from './lyrics-form';
+import { LyricsForm } from "./form";
 
-const NewLyricsPage = async () => {
-    return <LyricsForm />;
-};
-
-export default NewLyricsPage;
+export default async function NewLyricsPage() {
+  return <LyricsForm />;
+}

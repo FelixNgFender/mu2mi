@@ -1,12 +1,7 @@
-import { withErrorHandling } from '@/lib/error';
-import { MidiTranscriptionWebhookBody } from '@/types/replicate';
+import type { NextRequest } from "next/server";
+import type { MidiWebhookBody } from "@/types/replicate/output";
+import { replicateWebhookHandler } from "../replicate";
 
-import { replicateWebhookHandler } from '../replicate';
-
-export const POST = withErrorHandling(async (req: Request) => {
-    return await replicateWebhookHandler<MidiTranscriptionWebhookBody>(
-        req,
-        'midiTranscriptionStatus',
-        'midi',
-    );
-});
+export async function POST(request: NextRequest) {
+  return await replicateWebhookHandler<MidiWebhookBody>(request, "midi");
+}

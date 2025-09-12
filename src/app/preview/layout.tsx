@@ -1,21 +1,19 @@
-import { siteConfig } from '@/config/site';
-import { Metadata } from 'next';
+import type { Metadata } from "next";
+import { siteConfig } from "@/config";
 
-type TrackLayoutProps = {
-    children: React.ReactNode;
+type PreviewLayoutProps = {
+  children: React.ReactNode;
 };
 
 export const metadata: Metadata = {
-    title: 'Preview',
-    description: `Check out what I just made on ${siteConfig.name}!`,
+  title: "Preview",
+  description: `Check out what I just made on ${siteConfig.name}!`,
 };
 
-const TrackLayout = ({ children }: TrackLayoutProps) => {
-    return (
-        <section className="container relative flex h-full flex-1 flex-col space-y-4 py-4">
-            {children}
-        </section>
-    );
-};
-
-export default TrackLayout;
+export default function PreviewLayout({ children }: PreviewLayoutProps) {
+  return (
+    <section className="container relative flex h-full flex-1 flex-col gap-4 py-4">
+      {children}
+    </section>
+  );
+}

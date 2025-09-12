@@ -1,19 +1,16 @@
-import { siteConfig } from '@/config/site';
+import { siteConfig } from "@/config";
+import { FeatureHeader } from "../feature-header";
+import { TrackTable } from "../track-table";
 
-import { FeatureHeader } from '../feature-header';
-import { TrackTable } from '../track-table';
-
-const SeparationPage = async () => {
-    return (
-        <>
-            <FeatureHeader
-                title="Track Separation"
-                href={siteConfig.paths.studio.newTrackSeparation}
-                ctaLabel="Upload Track"
-            />
-            <TrackTable filter="trackSeparationStatus" />
-        </>
-    );
-};
-
-export default SeparationPage;
+export default async function SeparationPage() {
+  return (
+    <>
+      <FeatureHeader
+        title="Track Separation"
+        href={siteConfig.paths.studio.separation.new}
+        ctaLabel="Upload Track"
+      />
+      <TrackTable filter="separation" />
+    </>
+  );
+}

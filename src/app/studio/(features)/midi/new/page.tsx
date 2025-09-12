@@ -1,7 +1,5 @@
-import { MidiForm } from './midi-form';
+import { MidiForm } from "./form";
 
-const NewMidiPage = async () => {
-    return <MidiForm />;
-};
-
-export default NewMidiPage;
+export default async function NewMidiPage() {
+  return <MidiForm />;
+}

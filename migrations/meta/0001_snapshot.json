@@ -1,518 +1,629 @@
 {
-    "id": "bbf8e104-b259-44ca-a7f4-978657ee5d05",
-    "prevId": "8bf5ac7e-ee91-4c97-994a-fe3db11d6e35",
-    "version": "5",
-    "dialect": "pg",
-    "tables": {
-        "asset": {
-            "name": "asset",
-            "schema": "",
-            "columns": {
-                "id": {
-                    "name": "id",
-                    "type": "varchar(15)",
-                    "primaryKey": true,
-                    "notNull": true
-                },
-                "user_id": {
-                    "name": "user_id",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "track_id": {
-                    "name": "track_id",
-                    "type": "varchar(15)",
-                    "primaryKey": false,
-                    "notNull": false
-                },
-                "track_type": {
-                    "name": "track_type",
-                    "type": "track_asset_type",
-                    "primaryKey": false,
-                    "notNull": false
-                },
-                "name": {
-                    "name": "name",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "mime_type": {
-                    "name": "mime_type",
-                    "type": "mime_type",
-                    "primaryKey": false,
-                    "notNull": false
-                },
-                "updated_at": {
-                    "name": "updated_at",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "created_at": {
-                    "name": "created_at",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": true
-                }
-            },
-            "indexes": {
-                "asset_user_id_idx": {
-                    "name": "asset_user_id_idx",
-                    "columns": ["user_id"],
-                    "isUnique": false
-                },
-                "asset_track_id_idx": {
-                    "name": "asset_track_id_idx",
-                    "columns": ["track_id"],
-                    "isUnique": false
-                }
-            },
-            "foreignKeys": {
-                "asset_user_id_user_id_fk": {
-                    "name": "asset_user_id_user_id_fk",
-                    "tableFrom": "asset",
-                    "tableTo": "user",
-                    "columnsFrom": ["user_id"],
-                    "columnsTo": ["id"],
-                    "onDelete": "cascade",
-                    "onUpdate": "cascade"
-                },
-                "asset_track_id_track_id_fk": {
-                    "name": "asset_track_id_track_id_fk",
-                    "tableFrom": "asset",
-                    "tableTo": "track",
-                    "columnsFrom": ["track_id"],
-                    "columnsTo": ["id"],
-                    "onDelete": "cascade",
-                    "onUpdate": "cascade"
-                }
-            },
-            "compositePrimaryKeys": {},
-            "uniqueConstraints": {
-                "asset_name_unique": {
-                    "name": "asset_name_unique",
-                    "nullsNotDistinct": false,
-                    "columns": ["name"]
-                }
-            }
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.asset": {
+      "name": "asset",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(15)",
+          "primaryKey": true,
+          "notNull": true
         },
-        "email_verification_code": {
-            "name": "email_verification_code",
-            "schema": "",
-            "columns": {
-                "id": {
-                    "name": "id",
-                    "type": "serial",
-                    "primaryKey": true,
-                    "notNull": true
-                },
-                "code": {
-                    "name": "code",
-                    "type": "varchar(6)",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "user_id": {
-                    "name": "user_id",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "email": {
-                    "name": "email",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "expires_at": {
-                    "name": "expires_at",
-                    "type": "timestamp with time zone",
-                    "primaryKey": false,
-                    "notNull": true
-                }
-            },
-            "indexes": {
-                "email_verification_user_id_idx": {
-                    "name": "email_verification_user_id_idx",
-                    "columns": ["user_id"],
-                    "isUnique": false
-                }
-            },
-            "foreignKeys": {
-                "email_verification_code_user_id_user_id_fk": {
-                    "name": "email_verification_code_user_id_user_id_fk",
-                    "tableFrom": "email_verification_code",
-                    "tableTo": "user",
-                    "columnsFrom": ["user_id"],
-                    "columnsTo": ["id"],
-                    "onDelete": "cascade",
-                    "onUpdate": "cascade"
-                }
-            },
-            "compositePrimaryKeys": {},
-            "uniqueConstraints": {}
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         },
-        "oauth_account": {
-            "name": "oauth_account",
-            "schema": "",
-            "columns": {
-                "provider_id": {
-                    "name": "provider_id",
-                    "type": "provider_id",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "provider_user_id": {
-                    "name": "provider_user_id",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "user_id": {
-                    "name": "user_id",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                }
-            },
-            "indexes": {
-                "oauth_account_provider_id_idx": {
-                    "name": "oauth_account_provider_id_idx",
-                    "columns": ["provider_id"],
-                    "isUnique": false
-                },
-                "oauth_account_provider_user_id_idx": {
-                    "name": "oauth_account_provider_user_id_idx",
-                    "columns": ["provider_user_id"],
-                    "isUnique": false
-                },
-                "oauth_account_user_id_idx": {
-                    "name": "oauth_account_user_id_idx",
-                    "columns": ["user_id"],
-                    "isUnique": false
-                }
-            },
-            "foreignKeys": {
-                "oauth_account_user_id_user_id_fk": {
-                    "name": "oauth_account_user_id_user_id_fk",
-                    "tableFrom": "oauth_account",
-                    "tableTo": "user",
-                    "columnsFrom": ["user_id"],
-                    "columnsTo": ["id"],
-                    "onDelete": "cascade",
-                    "onUpdate": "cascade"
-                }
-            },
-            "compositePrimaryKeys": {
-                "oauth_account_provider_id_provider_user_id_pk": {
-                    "name": "oauth_account_provider_id_provider_user_id_pk",
-                    "columns": ["provider_id", "provider_user_id"]
-                }
-            },
-            "uniqueConstraints": {}
+        "track_id": {
+          "name": "track_id",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": false
         },
-        "password_reset_token": {
-            "name": "password_reset_token",
-            "schema": "",
-            "columns": {
-                "id": {
-                    "name": "id",
-                    "type": "text",
-                    "primaryKey": true,
-                    "notNull": true
-                },
-                "user_id": {
-                    "name": "user_id",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "expires_at": {
-                    "name": "expires_at",
-                    "type": "timestamp with time zone",
-                    "primaryKey": false,
-                    "notNull": true
-                }
-            },
-            "indexes": {
-                "password_reset_user_id_idx": {
-                    "name": "password_reset_user_id_idx",
-                    "columns": ["user_id"],
-                    "isUnique": false
-                }
-            },
-            "foreignKeys": {
-                "password_reset_token_user_id_user_id_fk": {
-                    "name": "password_reset_token_user_id_user_id_fk",
-                    "tableFrom": "password_reset_token",
-                    "tableTo": "user",
-                    "columnsFrom": ["user_id"],
-                    "columnsTo": ["id"],
-                    "onDelete": "cascade",
-                    "onUpdate": "cascade"
-                }
-            },
-            "compositePrimaryKeys": {},
-            "uniqueConstraints": {}
+        "track_type": {
+          "name": "track_type",
+          "type": "track_asset_type",
+          "primaryKey": false,
+          "notNull": false
         },
-        "session": {
-            "name": "session",
-            "schema": "",
-            "columns": {
-                "id": {
-                    "name": "id",
-                    "type": "text",
-                    "primaryKey": true,
-                    "notNull": true
-                },
-                "user_id": {
-                    "name": "user_id",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "expires_at": {
-                    "name": "expires_at",
-                    "type": "timestamp with time zone",
-                    "primaryKey": false,
-                    "notNull": true
-                }
-            },
-            "indexes": {
-                "session_user_id_idx": {
-                    "name": "session_user_id_idx",
-                    "columns": ["user_id"],
-                    "isUnique": false
-                }
-            },
-            "foreignKeys": {
-                "session_user_id_user_id_fk": {
-                    "name": "session_user_id_user_id_fk",
-                    "tableFrom": "session",
-                    "tableTo": "user",
-                    "columnsFrom": ["user_id"],
-                    "columnsTo": ["id"],
-                    "onDelete": "cascade",
-                    "onUpdate": "cascade"
-                }
-            },
-            "compositePrimaryKeys": {},
-            "uniqueConstraints": {}
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         },
-        "track": {
-            "name": "track",
-            "schema": "",
-            "columns": {
-                "id": {
-                    "name": "id",
-                    "type": "varchar(15)",
-                    "primaryKey": true,
-                    "notNull": true
-                },
-                "user_id": {
-                    "name": "user_id",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "name": {
-                    "name": "name",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "public": {
-                    "name": "public",
-                    "type": "boolean",
-                    "primaryKey": false,
-                    "notNull": true,
-                    "default": false
-                },
-                "music_generation_status": {
-                    "name": "music_generation_status",
-                    "type": "replicate_task_status",
-                    "primaryKey": false,
-                    "notNull": false
-                },
-                "style_remix_status": {
-                    "name": "style_remix_status",
-                    "type": "replicate_task_status",
-                    "primaryKey": false,
-                    "notNull": false
-                },
-                "track_separation_status": {
-                    "name": "track_separation_status",
-                    "type": "replicate_task_status",
-                    "primaryKey": false,
-                    "notNull": false
-                },
-                "track_analysis_status": {
-                    "name": "track_analysis_status",
-                    "type": "replicate_task_status",
-                    "primaryKey": false,
-                    "notNull": false
-                },
-                "midi_transcription_status": {
-                    "name": "midi_transcription_status",
-                    "type": "replicate_task_status",
-                    "primaryKey": false,
-                    "notNull": false
-                },
-                "lyrics_transcription_status": {
-                    "name": "lyrics_transcription_status",
-                    "type": "replicate_task_status",
-                    "primaryKey": false,
-                    "notNull": false
-                },
-                "updated_at": {
-                    "name": "updated_at",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "created_at": {
-                    "name": "created_at",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": true
-                }
-            },
-            "indexes": {
-                "track_user_id_idx": {
-                    "name": "track_user_id_idx",
-                    "columns": ["user_id"],
-                    "isUnique": false
-                }
-            },
-            "foreignKeys": {
-                "track_user_id_user_id_fk": {
-                    "name": "track_user_id_user_id_fk",
-                    "tableFrom": "track",
-                    "tableTo": "user",
-                    "columnsFrom": ["user_id"],
-                    "columnsTo": ["id"],
-                    "onDelete": "cascade",
-                    "onUpdate": "cascade"
-                }
-            },
-            "compositePrimaryKeys": {},
-            "uniqueConstraints": {}
-        },
-        "user": {
-            "name": "user",
-            "schema": "",
-            "columns": {
-                "id": {
-                    "name": "id",
-                    "type": "text",
-                    "primaryKey": true,
-                    "notNull": true
-                },
-                "email": {
-                    "name": "email",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "email_verified": {
-                    "name": "email_verified",
-                    "type": "boolean",
-                    "primaryKey": false,
-                    "notNull": true,
-                    "default": false
-                },
-                "hashed_password": {
-                    "name": "hashed_password",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": false
-                },
-                "updated_at": {
-                    "name": "updated_at",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "created_at": {
-                    "name": "created_at",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": true
-                }
-            },
-            "indexes": {},
-            "foreignKeys": {},
-            "compositePrimaryKeys": {},
-            "uniqueConstraints": {
-                "user_email_unique": {
-                    "name": "user_email_unique",
-                    "nullsNotDistinct": false,
-                    "columns": ["email"]
-                }
-            }
-        }
-    },
-    "enums": {
         "mime_type": {
-            "name": "mime_type",
-            "values": {
-                "audio/mp3": "audio/mp3",
-                "audio/mpeg": "audio/mpeg",
-                "audio/wav": "audio/wav",
-                "audio/flac": "audio/flac",
-                "audio/mp4": "audio/mp4",
-                "audio/mov": "audio/mov",
-                "audio/wma": "audio/wma",
-                "audio/ogg": "audio/ogg",
-                "audio/m4a": "audio/m4a",
-                "application/json": "application/json",
-                "image/png": "image/png",
-                "audio/sp-midi": "audio/sp-midi",
-                "audio/x-wav": "audio/x-wav"
-            }
+          "name": "mime_type",
+          "type": "mime_type",
+          "primaryKey": false,
+          "notNull": false
         },
-        "provider_id": {
-            "name": "provider_id",
-            "values": {
-                "github": "github",
-                "google": "google"
-            }
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
         },
-        "track_asset_type": {
-            "name": "track_asset_type",
-            "values": {
-                "generation": "generation",
-                "remix": "remix",
-                "original": "original",
-                "vocals": "vocals",
-                "accompaniment": "accompaniment",
-                "bass": "bass",
-                "drums": "drums",
-                "guitar": "guitar",
-                "piano": "piano",
-                "analysis": "analysis",
-                "analysis_sonic": "analysis_sonic",
-                "analysis_viz": "analysis_viz",
-                "midi": "midi",
-                "lyrics": "lyrics"
-            }
-        },
-        "replicate_task_status": {
-            "name": "replicate_task_status",
-            "values": {
-                "processing": "processing",
-                "succeeded": "succeeded",
-                "failed": "failed",
-                "canceled": "canceled"
-            }
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
         }
+      },
+      "indexes": {
+        "asset_user_id_idx": {
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "with": {},
+          "name": "asset_user_id_idx",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
+        },
+        "asset_track_id_idx": {
+          "columns": [
+            {
+              "expression": "track_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "with": {},
+          "name": "asset_track_id_idx",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "asset_user_id_user_id_fk": {
+          "name": "asset_user_id_user_id_fk",
+          "tableFrom": "asset",
+          "columnsFrom": ["user_id"],
+          "tableTo": "user",
+          "columnsTo": ["id"],
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
+        },
+        "asset_track_id_track_id_fk": {
+          "name": "asset_track_id_track_id_fk",
+          "tableFrom": "asset",
+          "columnsFrom": ["track_id"],
+          "tableTo": "track",
+          "columnsTo": ["id"],
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "asset_name_unique": {
+          "name": "asset_name_unique",
+          "columns": ["name"],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "schemas": {},
-    "_meta": {
-        "columns": {},
-        "schemas": {},
-        "tables": {}
+    "public.email_verification_code": {
+      "name": "email_verification_code",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar(6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "email_verification_user_id_idx": {
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "with": {},
+          "name": "email_verification_user_id_idx",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "email_verification_code_user_id_user_id_fk": {
+          "name": "email_verification_code_user_id_user_id_fk",
+          "tableFrom": "email_verification_code",
+          "columnsFrom": ["user_id"],
+          "tableTo": "user",
+          "columnsTo": ["id"],
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
+    },
+    "public.oauth_account": {
+      "name": "oauth_account",
+      "schema": "",
+      "columns": {
+        "provider_id": {
+          "name": "provider_id",
+          "type": "provider_id",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider_user_id": {
+          "name": "provider_user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "oauth_account_provider_id_idx": {
+          "columns": [
+            {
+              "expression": "provider_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "with": {},
+          "name": "oauth_account_provider_id_idx",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
+        },
+        "oauth_account_provider_user_id_idx": {
+          "columns": [
+            {
+              "expression": "provider_user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "with": {},
+          "name": "oauth_account_provider_user_id_idx",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
+        },
+        "oauth_account_user_id_idx": {
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "with": {},
+          "name": "oauth_account_user_id_idx",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "oauth_account_user_id_user_id_fk": {
+          "name": "oauth_account_user_id_user_id_fk",
+          "tableFrom": "oauth_account",
+          "columnsFrom": ["user_id"],
+          "tableTo": "user",
+          "columnsTo": ["id"],
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {
+        "oauth_account_provider_id_provider_user_id_pk": {
+          "name": "oauth_account_provider_id_provider_user_id_pk",
+          "columns": ["provider_id", "provider_user_id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
+    },
+    "public.password_reset_token": {
+      "name": "password_reset_token",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "password_reset_user_id_idx": {
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "with": {},
+          "name": "password_reset_user_id_idx",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "password_reset_token_user_id_user_id_fk": {
+          "name": "password_reset_token_user_id_user_id_fk",
+          "tableFrom": "password_reset_token",
+          "columnsFrom": ["user_id"],
+          "tableTo": "user",
+          "columnsTo": ["id"],
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
+    },
+    "public.session": {
+      "name": "session",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "session_user_id_idx": {
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "with": {},
+          "name": "session_user_id_idx",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "session_user_id_user_id_fk": {
+          "name": "session_user_id_user_id_fk",
+          "tableFrom": "session",
+          "columnsFrom": ["user_id"],
+          "tableTo": "user",
+          "columnsTo": ["id"],
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
+    },
+    "public.track": {
+      "name": "track",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(15)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public": {
+          "name": "public",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "music_generation_status": {
+          "name": "music_generation_status",
+          "type": "replicate_task_status",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "style_remix_status": {
+          "name": "style_remix_status",
+          "type": "replicate_task_status",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "track_separation_status": {
+          "name": "track_separation_status",
+          "type": "replicate_task_status",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "track_analysis_status": {
+          "name": "track_analysis_status",
+          "type": "replicate_task_status",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "midi_transcription_status": {
+          "name": "midi_transcription_status",
+          "type": "replicate_task_status",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lyrics_transcription_status": {
+          "name": "lyrics_transcription_status",
+          "type": "replicate_task_status",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "track_user_id_idx": {
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "with": {},
+          "name": "track_user_id_idx",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "track_user_id_user_id_fk": {
+          "name": "track_user_id_user_id_fk",
+          "tableFrom": "track",
+          "columnsFrom": ["user_id"],
+          "tableTo": "user",
+          "columnsTo": ["id"],
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
+    },
+    "public.user": {
+      "name": "user",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email_verified": {
+          "name": "email_verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "hashed_password": {
+          "name": "hashed_password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_email_unique": {
+          "name": "user_email_unique",
+          "columns": ["email"],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     }
+  },
+  "enums": {
+    "public.mime_type": {
+      "name": "mime_type",
+      "schema": "public",
+      "values": [
+        "audio/mp3",
+        "audio/mpeg",
+        "audio/wav",
+        "audio/flac",
+        "audio/mp4",
+        "audio/mov",
+        "audio/wma",
+        "audio/ogg",
+        "audio/m4a",
+        "application/json",
+        "image/png",
+        "audio/sp-midi",
+        "audio/x-wav"
+      ]
+    },
+    "public.provider_id": {
+      "name": "provider_id",
+      "schema": "public",
+      "values": ["github", "google"]
+    },
+    "public.track_asset_type": {
+      "name": "track_asset_type",
+      "schema": "public",
+      "values": [
+        "generation",
+        "remix",
+        "original",
+        "vocals",
+        "accompaniment",
+        "bass",
+        "drums",
+        "guitar",
+        "piano",
+        "analysis",
+        "analysis_sonic",
+        "analysis_viz",
+        "midi",
+        "lyrics"
+      ]
+    },
+    "public.replicate_task_status": {
+      "name": "replicate_task_status",
+      "schema": "public",
+      "values": ["processing", "succeeded", "failed", "canceled"]
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "id": "bbf8e104-b259-44ca-a7f4-978657ee5d05",
+  "prevId": "8bf5ac7e-ee91-4c97-994a-fe3db11d6e35",
+  "sequences": {},
+  "policies": {},
+  "views": {},
+  "roles": {}
 }

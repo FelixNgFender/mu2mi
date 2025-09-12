@@ -1,12 +1,7 @@
-import { withErrorHandling } from '@/lib/error';
-import { LyricsTranscriptionWebhookBody } from '@/types/replicate';
+import type { NextRequest } from "next/server";
+import type { LyricsWebhookBody } from "@/types/replicate/output";
+import { replicateWebhookHandler } from "../replicate";
 
-import { replicateWebhookHandler } from '../replicate';
-
-export const POST = withErrorHandling(async (req: Request) => {
-    return await replicateWebhookHandler<LyricsTranscriptionWebhookBody>(
-        req,
-        'lyricsTranscriptionStatus',
-        'lyrics',
-    );
-});
+export async function POST(request: NextRequest) {
+  return await replicateWebhookHandler<LyricsWebhookBody>(request, "lyrics");
+}

@@ -1,97 +1,66 @@
-import { downloadUserTrackAssets } from '@/app/studio/queries';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Skeleton } from '@/components/ui/skeleton';
-import { siteConfig } from '@/config/site';
-import { httpStatus } from '@/lib/http';
-import { formatValidationErrors } from '@/lib/utils';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
+import type { Route } from "next";
+import Image from "next/image";
+import AudioPlayer from "@/app/audio-player";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { siteConfig } from "@/config";
+import { httpStatus } from "@/lib/http";
+import { client } from "@/lib/rpc";
 
-const AudioPlayer = dynamic(() => import('@/app/audio-player'), {
-    ssr: false,
-    loading: () => (
-        <div className="flex flex-col space-y-4">
-            <div className="my-1 flex justify-between space-x-2">
-                <Skeleton className="h-full w-32 max-w-full" />
-                <Skeleton className="h-10 w-72" />
-                <Skeleton className="h-10 w-40" />
-            </div>
-            <div className="flex-1">
-                <Skeleton className="mt-12 h-[480px] w-full" />
-            </div>
-        </div>
-    ),
-});
-
-type TrackPageProps = {
-    params: {
-        id: string;
-    };
-    searchParams: { callback?: string };
-};
-
-const validCallbacks = [
-    siteConfig.paths.studio.musicGeneration,
-    // siteConfig.paths.studio.styleRemix,
-    siteConfig.paths.studio.trackSeparation,
-    siteConfig.paths.studio.trackAnalysis,
+const VALID_CALLBACKS = [
+  siteConfig.paths.studio.generation.home,
+  siteConfig.paths.studio.separation.home,
+  siteConfig.paths.studio.analysis.home,
 ];
 
-const TrackPage = async ({ params, searchParams }: TrackPageProps) => {
-    const trackId = params.id;
-    const callback = searchParams.callback;
+export default async function TrackPage({
+  params,
+  searchParams,
+}: PageProps<typeof siteConfig.paths.studio.preview.track.home>) {
+  const trackId = Number.parseInt((await params).id, 10);
+  const { callback } = await searchParams;
 
-    if (callback && !(validCallbacks as string[]).includes(callback)) {
-        throw new Error(httpStatus.clientError.badRequest.humanMessage);
-    }
+  if (
+    typeof callback !== "string" ||
+    !(VALID_CALLBACKS as string[]).includes(callback)
+  ) {
+    throw new Error(httpStatus.clientError.badRequest.humanMessage);
+  }
 
-    const {
-        data: assetLinks,
-        validationErrors,
-        serverError,
-    } = await downloadUserTrackAssets({
-        trackId,
+  const { data: assetLinks, error } =
+    await client.asset.downloadUserTrackAssets({
+      id: trackId,
     });
 
-    if (validationErrors) {
-        throw new Error(formatValidationErrors(validationErrors));
-    }
+  if (error) {
+    throw error;
+  }
 
-    if (serverError || !assetLinks) {
-        throw new Error(serverError);
-    }
-
-    return (
-        <>
-            <AudioPlayer
-                assetLinks={assetLinks.filter(
-                    (link) =>
-                        link.type !== 'analysis_viz' &&
-                        link.type !== 'analysis',
-                )}
-                callback={callback ? callback : undefined}
+  return (
+    <>
+      <AudioPlayer
+        assetLinks={assetLinks.filter(
+          (link) => link.type !== "analysis_viz" && link.type !== "analysis",
+        )}
+        callback={callback as Route}
+      />
+      {assetLinks.find((link) => link.type === "analysis_viz") && (
+        <ScrollArea className="w-full whitespace-nowrap rounded-md border px-4 py-2 sm:border-0">
+          <div className="relative mx-auto min-h-96 w-[1024px]">
+            <Image
+              src={
+                assetLinks.find((link) => link.type === "analysis_viz")?.url ??
+                ""
+              }
+              alt="Track analysis visualization"
+              fill
+              priority
+              unoptimized
+              className="object-contain"
             />
-            {assetLinks.find((link) => link.type === 'analysis_viz') && (
-                <ScrollArea className="w-full whitespace-nowrap rounded-md border px-4 py-2 sm:border-0">
-                    <div className="relative mx-auto min-h-96 w-[1024px]">
-                        <Image
-                            src={
-                                assetLinks.find(
-                                    (link) => link.type === 'analysis_viz',
-                                )?.url!
-                            }
-                            alt="Track analysis visualization"
-                            fill
-                            priority
-                            unoptimized
-                            className="object-contain"
-                        />
-                    </div>
-                    <ScrollBar orientation="horizontal" />
-                </ScrollArea>
-            )}
-        </>
-    );
-};
-
-export default TrackPage;
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      )}
+    </>
+  );
+}
