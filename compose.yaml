@@ -18,30 +18,6 @@ services:
       timeout: 5s
       retries: 10
 
-  # web-migration:
-  #   build:
-  #     context: .
-  #     dockerfile: migration.Dockerfile
-  #     target: migration
-  #   restart: no
-  #   environment:
-  #     - DATABASE_URL=${DATABASE_URL}
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   network_mode: host
-
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   restart: unless-stopped
-  #   environment:
-  #     - PGADMIN_DEFAULT_EMAIL=user@domain.com
-  #     - PGADMIN_DEFAULT_PASSWORD=SuperSecret
-  #   volumes:
-  #     - pgadmin-data:/var/lib/pgadmin/
-  #   ports:
-  #     - 5050:80
-
   redis:
     image: redis:7.2.4-alpine
     container_name: redis
