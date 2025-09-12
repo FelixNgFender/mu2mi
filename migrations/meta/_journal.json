@@ -71,6 +71,13 @@
       "when": 1757716473624,
       "tag": "0009_happy_rage",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1757717767074,
+      "tag": "0010_wealthy_romulus",
+      "breakpoints": true
     }
   ]
 }
