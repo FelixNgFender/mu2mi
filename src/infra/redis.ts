@@ -1,4 +1,5 @@
 import "server-only";
+import { PHASE_PRODUCTION_BUILD } from "next/constants";
 import { createClient } from "redis";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
@@ -12,4 +13,6 @@ export const redis = createClient({
 }).on("error", async (error) => log.error(error, "redis client error"));
 // .on("ready", () => log.info({}, "redis client ready"));
 
-redis.connect();
+if (process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD) {
+  await redis.connect();
+}
