@@ -1,6 +1,7 @@
 // This file should not contain any runtime logic besides defining the schema.
 // See https://orm.drizzle.team/docs/migrations#quick-start
 import {
+  bigint,
   boolean,
   index,
   integer,
@@ -176,3 +177,10 @@ export const track = pgTable(
   },
   (table) => [index().on(table.userId)],
 );
+
+export const rate_limit = pgTable("rate_limit", {
+  id: text("id").primaryKey(),
+  key: text("key"),
+  count: integer("count"),
+  lastRequest: bigint("last_request", { mode: "number" }),
+});

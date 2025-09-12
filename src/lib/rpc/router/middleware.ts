@@ -1,10 +1,10 @@
 import { trace } from "@opentelemetry/api";
 import { os } from "@orpc/server";
-import { db, fileStorage, redis, replicate } from "@/infra";
+import { db, fileStorage, replicate } from "@/infra";
 import { auth } from "@/lib/auth/server";
 import { httpStatus } from "@/lib/http";
 import { createTrackProcessingRateLimiter } from "@/lib/rate-limit";
-import { base, rateLimitContext, redisContext } from "./context";
+import { base, dbContext, rateLimitContext } from "./context";
 
 export const requiresAuth = base
   .errors({
@@ -44,20 +44,12 @@ export const dbProvider = os.middleware(async ({ next }) => {
   });
 });
 
-export const redisProvider = os.middleware(async ({ next }) => {
-  return await next({
-    context: {
-      redis,
-    },
-  });
-});
-
-export const rateLimitProvider = redisContext.middleware(
+export const rateLimitProvider = dbContext.middleware(
   async ({ context, next }) => {
     return await next({
       context: {
         rateLimit: {
-          trackProcessing: createTrackProcessingRateLimiter(context.redis),
+          trackProcessing: createTrackProcessingRateLimiter(context.db.$client),
         },
       },
     });

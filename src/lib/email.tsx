@@ -1,3 +1,4 @@
+import "server-only";
 import { SES } from "@aws-sdk/client-ses";
 import { render } from "@react-email/components";
 import PasswordResetEmail from "@/components/emails/password-reset";
@@ -5,7 +6,6 @@ import SignUpEmail from "@/components/emails/sign-up";
 import { siteConfig } from "@/config";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
-import "server-only";
 
 const log = logger.child({ module: "lib/email" });
 

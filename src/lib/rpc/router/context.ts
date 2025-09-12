@@ -1,10 +1,10 @@
 import { os } from "@orpc/server";
 import { headers } from "next/headers";
 import type { Logger } from "pino";
-import type { RateLimiterRedis } from "rate-limiter-flexible";
+import type { RateLimiterPostgres } from "rate-limiter-flexible";
 import { z } from "zod";
 import { env } from "@/env";
-import type { redis } from "@/infra";
+import type { DB } from "@/infra";
 import type { Session } from "@/lib/auth/client";
 import { httpStatus } from "@/lib/http";
 import { logger } from "@/lib/logger";
@@ -42,13 +42,15 @@ export async function createBaseContext(): Promise<BaseContext> {
   };
 }
 
-type RedisContext = { redis: typeof redis };
+type DatabaseContext = BaseContext & {
+  db: DB;
+};
 
-export const redisContext = os.$context<RedisContext>();
+export const dbContext = os.$context<DatabaseContext>();
 
-type RateLimitContext = BaseContext & {
+type RateLimitContext = DatabaseContext & {
   rateLimit: {
-    trackProcessing: RateLimiterRedis;
+    trackProcessing: RateLimiterPostgres;
   };
   session: Session;
 };

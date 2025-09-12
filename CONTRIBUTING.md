@@ -70,9 +70,8 @@ Follow the following steps to ensure your contribution goes smoothly.
 
 #### Setting Up Your Development Environment
 
-Mu2Mi is built with Next.js, PostgreSQL, Minio, and Redis. The development
-environment is orchestrated with Docker Compose. To set up your development
-environment:
+Mu2Mi is built with Next.js, PostgreSQL, and Minio. The development environment
+is orchestrated with Docker Compose. To set up your development environment:
 
 1. Have the required dependencies installed on your machine and the repository
    cloned.

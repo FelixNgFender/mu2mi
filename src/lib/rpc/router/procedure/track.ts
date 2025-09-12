@@ -16,7 +16,6 @@ import {
   fileStorageProvider,
   rateLimitProvider,
   rateLimitTrackProcessing,
-  redisProvider,
   replicateProvider,
   requiresAuth,
 } from "../middleware";
@@ -48,7 +47,6 @@ export const generateMusic = base
   .use(requiresAuth)
   .use(dbProvider)
   .use(fileStorageProvider)
-  .use(redisProvider)
   .use(rateLimitProvider)
   .use(rateLimitTrackProcessing)
   .use(replicateProvider)
@@ -121,7 +119,6 @@ export const analyzeTrack = base
   .use(requiresAuth)
   .use(dbProvider)
   .use(fileStorageProvider)
-  .use(redisProvider)
   .use(rateLimitProvider)
   .use(rateLimitTrackProcessing)
   .use(replicateProvider)
@@ -173,7 +170,6 @@ const transcribeLyrics = base
   .use(requiresAuth)
   .use(dbProvider)
   .use(fileStorageProvider)
-  .use(redisProvider)
   .use(rateLimitProvider)
   .use(rateLimitTrackProcessing)
   .use(replicateProvider)
@@ -225,7 +221,6 @@ const transcribeMidi = base
   .use(requiresAuth)
   .use(dbProvider)
   .use(fileStorageProvider)
-  .use(redisProvider)
   .use(rateLimitProvider)
   .use(rateLimitTrackProcessing)
   .use(replicateProvider)
@@ -277,7 +272,6 @@ const separateTrack = base
   .use(requiresAuth)
   .use(dbProvider)
   .use(fileStorageProvider)
-  .use(redisProvider)
   .use(rateLimitProvider)
   .use(rateLimitTrackProcessing)
   .use(replicateProvider)

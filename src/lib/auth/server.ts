@@ -4,7 +4,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { siteConfig } from "@/config";
 import { env } from "@/env";
-import { db, redis } from "@/infra";
+import { db } from "@/infra";
 import { sendEmailVerificationLink, sendPasswordResetLink } from "@/lib/email";
 import { logger } from "@/lib/logger";
 
@@ -21,19 +21,8 @@ export const auth = betterAuth({
   }),
   rateLimit: {
     enabled: env.ENABLE_RATE_LIMIT,
-    storage: "secondary-storage",
-  },
-  secondaryStorage: {
-    get: async (key) => {
-      return await redis.get(key);
-    },
-    set: async (key, value, ttl) => {
-      if (ttl) await redis.set(key, value, { EX: ttl });
-      else await redis.set(key, value);
-    },
-    delete: async (key) => {
-      await redis.del(key);
-    },
+    storage: "database",
+    modelName: "rate_limit",
   },
   session: {
     cookieCache: {

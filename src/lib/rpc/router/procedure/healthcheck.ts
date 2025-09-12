@@ -1,18 +1,16 @@
 import { sql } from "drizzle-orm";
 import { env } from "@/env";
 import { base } from "../context";
-import { dbProvider, fileStorageProvider, redisProvider } from "../middleware";
+import { dbProvider, fileStorageProvider } from "../middleware";
 
 const execute = base
   .use(dbProvider)
-  .use(redisProvider)
   .use(fileStorageProvider)
   .handler(async ({ context }) => {
-    const { db, redis, fileStorage } = context;
+    const { db, fileStorage } = context;
     const start = performance.now();
     await db.execute(sql`SELECT 1`);
     const databaseLatency = (performance.now() - start).toFixed(2);
-    await redis.ping();
     const cacheLatency = (
       performance.now() -
       start -

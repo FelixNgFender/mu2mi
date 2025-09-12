@@ -64,6 +64,13 @@
       "when": 1757213875767,
       "tag": "0008_pale_genesis",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1757716473624,
+      "tag": "0009_happy_rage",
+      "breakpoints": true
     }
   ]
 }

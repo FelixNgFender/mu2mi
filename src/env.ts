@@ -62,7 +62,6 @@ export const env = createEnv({
       .url()
       .default("postgresql://postgres:awesomepassword@127.0.0.1:5432/postgres"),
     DATABASE_LOGGING: isBoolean.default(true),
-    REDIS_URL: z.url().default("redis://127.0.0.1:6379/0"),
 
     // replicate
     REPLICATE_API_TOKEN: isString,

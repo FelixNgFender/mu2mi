@@ -18,21 +18,6 @@ services:
       timeout: 5s
       retries: 10
 
-  redis:
-    image: redis:7.2.4-alpine
-    container_name: redis
-    restart: unless-stopped
-    command: redis-server --save 60 1 --loglevel warning
-    volumes:
-      - redis-data:/data
-    ports:
-      - "6379:6379"
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 1s
-      timeout: 5s
-      retries: 10
-
   minio:
     image: quay.io/minio/minio:RELEASE.2024-01-18T22-51-28Z
     container_name: minio
@@ -127,5 +112,4 @@ services:
 volumes:
   postgres-data:
   pgadmin-data:
-  redis-data:
   minio_data:

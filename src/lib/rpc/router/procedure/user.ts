@@ -2,14 +2,14 @@ import type { RateLimiterRes } from "rate-limiter-flexible";
 import { env } from "@/env";
 import { FRESH_TRACK_PROCESSING_RATE_LIMITER_RES } from "@/lib/rate-limit";
 import { base } from "../context";
-import { rateLimitProvider, redisProvider, requiresAuth } from "../middleware";
+import { dbProvider, rateLimitProvider, requiresAuth } from "../middleware";
 
 /**
  * 10 requests from the same user in 24 hours.
  */
 const consumeCredits = base
   .use(requiresAuth)
-  .use(redisProvider)
+  .use(dbProvider)
   .use(rateLimitProvider)
   .handler(async ({ context }): Promise<RateLimiterRes> => {
     if (env.ENABLE_RATE_LIMIT) {
@@ -22,7 +22,7 @@ const consumeCredits = base
 
 const getCredits = base
   .use(requiresAuth)
-  .use(redisProvider)
+  .use(dbProvider)
   .use(rateLimitProvider)
   .handler(async ({ context }): Promise<RateLimiterRes> => {
     if (env.ENABLE_RATE_LIMIT) {
