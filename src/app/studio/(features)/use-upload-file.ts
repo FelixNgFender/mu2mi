@@ -28,10 +28,7 @@ export function useUploadFile() {
   return useMutation<void, Error, UploadFileParams, unknown>({
     mutationFn: uploadFile,
     onMutate() {
-      toast.loading("Your file(s) are being uploaded.", { duration: 4000 });
-    },
-    onSuccess() {
-      toast.success("File(s) uploaded successfully!");
+      toast("Your file(s) are being uploaded.");
     },
     onError(error) {
       toast.error("Uh oh! Something went wrong.", {
