@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const webhookMetadataSchema = z.object({
   trackId: z.coerce.number(),
-  userId: z.string().min(15).max(15),
+  userId: z.string(),
 });
 
 export type WebhookMetadataSchema = z.infer<typeof webhookMetadataSchema>;
