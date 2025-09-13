@@ -121,7 +121,12 @@ export const replicateWebhookHandler = async <
       await Promise.all(
         Object.entries(output).map(async ([stem, url]) => {
           if (url && typeof url === "string") {
-            await saveAssetAndMetadata(trackId, userId, url, stem as AssetType);
+            await saveAssetAndMetadata(
+              trackId,
+              userId,
+              url,
+              stem === "other" ? "accompaniment" : (stem as AssetType),
+            );
           }
         }),
       );
