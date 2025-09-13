@@ -126,7 +126,9 @@ export const asset = pgTable(
     userId: text()
       .notNull()
       .references(() => user.id, cascadingUpdateAndDelete),
-    trackId: integer().references(() => track.id, cascadingUpdateAndDelete),
+    trackId: integer()
+      .notNull()
+      .references(() => track.id, cascadingUpdateAndDelete),
     name: text().unique().notNull(), // FK to S3 object name, cannot guarantee that users will actually upload files with their presigned URLs
     type: assetType(),
     mimeType: mimeType(),

@@ -78,6 +78,13 @@
       "when": 1757717767074,
       "tag": "0010_wealthy_romulus",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1757732405045,
+      "tag": "0011_mighty_victor_mancha",
+      "breakpoints": true
     }
   ]
 }
