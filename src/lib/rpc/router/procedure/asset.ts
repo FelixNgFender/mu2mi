@@ -152,6 +152,9 @@ const generatePresignedUrl = base
     },
   })
   .handler(async ({ context, input, errors }) => {
+    if (input.extension.length >= 1 && input.extension.charAt(0) !== ".") {
+      input.extension = `.${input.extension}`;
+    }
     const objectName = generateObjectKey(input.extension);
     const url = await context.fileStorage.presignedPutObject(
       context.env.S3_BUCKET_NAME,

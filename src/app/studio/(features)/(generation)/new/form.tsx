@@ -163,13 +163,10 @@ export function GenerationForm() {
       return;
     }
 
-    const extension = data.file.name.includes(".")
-      ? `.${data.file.name.split(".").pop()}`
-      : "";
     generatePresignedUrl.mutate(
       {
         type: data.file.type as (typeof GENERATION_ALLOWED_MIME_TYPES)[number],
-        extension,
+        extension: data.file.name.split(".").pop() || "",
         size: data.file.size,
         checksum: await computeSHA256(data.file),
       },
