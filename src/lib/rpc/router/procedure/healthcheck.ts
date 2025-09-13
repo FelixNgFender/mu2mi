@@ -17,12 +17,12 @@ const execute = base
       start -
       Number(databaseLatency)
     ).toFixed(2);
-    const result = {
-      databaseLatency: `${databaseLatency}ms`,
-      fileStorageLatency: `${fileStorageLatency}ms`,
+    const latency = {
+      db: `${databaseLatency}ms`,
+      s3: `${fileStorageLatency}ms`,
     };
-    context.logger.info({ result }, "healthcheck");
-    return result;
+    context.logger.info({ latency }, "healthcheck");
+    return latency;
   });
 
 export default {
