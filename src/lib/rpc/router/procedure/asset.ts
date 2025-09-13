@@ -1,4 +1,4 @@
-import { type InferRouterOutputs, os } from "@orpc/server";
+import type { InferRouterOutputs } from "@orpc/server";
 import z from "zod";
 import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE_BYTES } from "@/config/asset";
 import { httpStatus } from "@/lib/http";
@@ -8,11 +8,13 @@ import trackModel from "@/model/track";
 import { base } from "../context";
 import { dbProvider, fileStorageProvider, requiresAuth } from "../middleware";
 
-const create = os
+const create = base
   .use(dbProvider)
   .input(assetModel.createSchema)
   .handler(async ({ input, context }) => {
-    return await assetModel.create(context.db, input);
+    const createdAsset = await assetModel.create(context.db, input);
+    context.logger.info({ createdAsset }, "created asset");
+    return createdAsset;
   });
 
 const uploadToFileStorageSchema = z.object({
@@ -27,7 +29,7 @@ const uploadToFileStorage = base
   .use(fileStorageProvider)
   .input(uploadToFileStorageSchema)
   .handler(async ({ context, input }) => {
-    await context.fileStorage.putObject(
+    const uploadedObjectInfo = await context.fileStorage.putObject(
       context.env.S3_BUCKET_NAME,
       input.objectName,
       input.fileData,
@@ -36,6 +38,8 @@ const uploadToFileStorage = base
         "Content-Type": input.mimeType,
       },
     );
+
+    context.logger.info({ uploadedObjectInfo }, "uploaded to file storage");
   });
 
 const downloadUserTrackAssets = base
@@ -81,6 +85,7 @@ const downloadUserTrackAssets = base
       return { id: asset.id, url, type: asset.type };
     });
     const assets = await Promise.all(promises);
+    context.logger.info({ assets }, "downloaded user track assets");
     return assets;
   });
 
@@ -125,6 +130,7 @@ const downloadPublicTrackAssets = base
       return { id: asset.id, url, type: asset.type };
     });
     const assets = await Promise.all(promises);
+    context.logger.info({ assets }, "downloaded public track assets");
     return assets;
   });
 
@@ -166,6 +172,10 @@ const generatePresignedUrl = base
       throw errors.INTERNAL_SERVER_ERROR();
     }
 
+    context.logger.info(
+      { newAsset, url },
+      "created presigned url for new asset",
+    );
     return {
       url,
       assetId: newAsset.id,

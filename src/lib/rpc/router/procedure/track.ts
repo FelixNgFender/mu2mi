@@ -379,17 +379,18 @@ const deleteUserTrack = base
       throw errors.UNAUTHORIZED();
     }
 
-    context.logger.info(
-      { trackId: input, assets },
-      "deleting track and related assets",
-    );
-    await Promise.all([
+    const [removeObjectsResponse] = await Promise.all([
       context.fileStorage.removeObjects(
         context.env.S3_BUCKET_NAME,
         assets.map((asset) => asset.name),
       ),
       trackModel.remove(context.db, input), // cascades to asset table
     ]);
+
+    context.logger.info(
+      { trackId: input.id, removeObjectsResponse },
+      "deleted track and related assets",
+    );
   });
 
 export default {
