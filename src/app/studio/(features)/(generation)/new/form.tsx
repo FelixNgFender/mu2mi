@@ -119,9 +119,7 @@ export function GenerationForm() {
       },
       onSuccess() {
         window.umami?.track(umami.generation.success.name);
-        toast("File uploaded successfully.", {
-          description: "🔥 We are cooking your track.",
-        });
+        toast("🔥 We are cooking your track.");
         form.reset();
       },
     }),

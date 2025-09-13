@@ -13,7 +13,7 @@ export interface StudioSidebarNavProps {
 export function StudioSidebar({ items }: StudioSidebarNavProps) {
   const pathname = usePathname();
   return items.length ? (
-    <div className="gap-8 px-3 py-4">
+    <div className="flex flex-col gap-4 px-3 py-4">
       {items.map((item) => (
         <div key={item.title}>
           <h4 className="text-md mb-2 px-4 font-semibold tracking-tight lg:text-lg">

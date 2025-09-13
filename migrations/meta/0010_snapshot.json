@@ -110,13 +110,9 @@
         "account_user_id_user_id_fk": {
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "cascade",
           "onDelete": "cascade"
         }
@@ -231,26 +227,18 @@
         "asset_user_id_user_id_fk": {
           "name": "asset_user_id_user_id_fk",
           "tableFrom": "asset",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "cascade",
           "onDelete": "cascade"
         },
         "asset_track_id_track_id_fk": {
           "name": "asset_track_id_track_id_fk",
           "tableFrom": "asset",
-          "columnsFrom": [
-            "track_id"
-          ],
+          "columnsFrom": ["track_id"],
           "tableTo": "track",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "cascade",
           "onDelete": "cascade"
         }
@@ -259,9 +247,7 @@
       "uniqueConstraints": {
         "asset_name_unique": {
           "name": "asset_name_unique",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "nullsNotDistinct": false
         }
       },
@@ -397,13 +383,9 @@
         "session_user_id_user_id_fk": {
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "cascade",
           "onDelete": "cascade"
         }
@@ -412,9 +394,7 @@
       "uniqueConstraints": {
         "session_token_unique": {
           "name": "session_token_unique",
-          "columns": [
-            "token"
-          ],
+          "columns": ["token"],
           "nullsNotDistinct": false
         }
       },
@@ -512,13 +492,9 @@
         "track_user_id_user_id_fk": {
           "name": "track_user_id_user_id_fk",
           "tableFrom": "track",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "cascade",
           "onDelete": "cascade"
         }
@@ -601,9 +577,7 @@
       "uniqueConstraints": {
         "user_email_unique": {
           "name": "user_email_unique",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "nullsNotDistinct": false
         }
       },
@@ -721,23 +695,12 @@
     "public.replicate_task_status": {
       "name": "replicate_task_status",
       "schema": "public",
-      "values": [
-        "processing",
-        "succeeded",
-        "failed",
-        "canceled"
-      ]
+      "values": ["processing", "succeeded", "failed", "canceled"]
     },
     "public.track_type": {
       "name": "track_type",
       "schema": "public",
-      "values": [
-        "generation",
-        "separation",
-        "analysis",
-        "midi",
-        "lyrics"
-      ]
+      "values": ["generation", "separation", "analysis", "midi", "lyrics"]
     }
   },
   "schemas": {},

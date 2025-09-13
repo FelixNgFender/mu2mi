@@ -173,8 +173,6 @@ const generatePresignedUrl = base
   });
 
 export default {
-  // findTrackAssets,
-  // findUserAssets,
   create,
   uploadToFileStorage,
   downloadUserTrackAssets,

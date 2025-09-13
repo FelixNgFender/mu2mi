@@ -27,7 +27,13 @@ async function uploadFile({ url, file }: UploadFileParams): Promise<void> {
 export function useUploadFile() {
   return useMutation<void, Error, UploadFileParams, unknown>({
     mutationFn: uploadFile,
-    onError: (error) => {
+    onMutate() {
+      toast("Your file(s) are being uploaded.");
+    },
+    onSuccess() {
+      toast.success("File(s) uploaded successfully!");
+    },
+    onError(error) {
       toast.error("Uh oh! Something went wrong.", {
         description: error.message,
       });

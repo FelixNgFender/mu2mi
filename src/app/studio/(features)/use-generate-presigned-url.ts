@@ -27,7 +27,6 @@ export function useGeneratePresignedUrl({ type }: { type: TrackType }) {
             window.umami?.track(umami.lyrics.init.name);
             break;
         }
-        toast("Your file(s) are being uploaded.");
       },
       onError(error) {
         if (!isDefinedError(error)) {

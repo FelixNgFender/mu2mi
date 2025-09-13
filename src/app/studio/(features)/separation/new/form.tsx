@@ -122,9 +122,7 @@ export function SeparationForm() {
       },
       onSuccess() {
         window.umami?.track(umami.separation.success.name);
-        toast("File uploaded successfully.", {
-          description: "🔥 We are cooking your track.",
-        });
+        toast("🔥 We are cooking your track.");
         form.reset();
       },
     }),

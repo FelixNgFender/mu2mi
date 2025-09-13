@@ -85,6 +85,11 @@ export function MidiForm() {
         form.reset();
         setCurrentStep(-1);
       },
+      onSuccess() {
+        window.umami?.track(umami.midi.success.name);
+        toast("🔥 We are cooking your track.");
+        form.reset();
+      },
     }),
   );
 

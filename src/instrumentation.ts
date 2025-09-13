@@ -7,7 +7,7 @@ export async function register() {
       // https://orpc.unnoq.com/docs/integrations/opentelemetry#handling-uncaught-exceptions
       const { logger } = await import("@/lib/logger");
       const log = logger.child({ module: "instrumentation" });
-      log.debug({ env }, "running with envinronment variables");
+      log.info({ env }, "running with envinronment variables");
       const { SpanStatusCode, trace } = await import("@opentelemetry/api");
 
       const tracer = trace.getTracer("uncaught-errors");

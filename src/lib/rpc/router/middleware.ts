@@ -19,9 +19,8 @@ export const requiresAuth = base
     }
 
     const span = trace.getActiveSpan();
-
-    span?.setAttribute("user.id", session.user.id);
-    span?.setAttribute("user.email", session.user.email ?? "unknown");
+    span?.setAttribute("mu2mi.user.id", session.user.id);
+    span?.setAttribute("mu2mi.user.email", session.user.email ?? "unknown");
     span?.addEvent("authenticated user");
 
     return await next({
@@ -73,12 +72,31 @@ export const rateLimitTrackProcessing = rateLimitContext
       { rateLimitRes, userId: context.session.user.id },
       "rate limit status",
     );
+
+    const span = trace.getActiveSpan();
+    span?.setAttribute(
+      "mu2mi.rate_limit.track_processing.remaining_points",
+      rateLimitRes.remainingPoints,
+    );
+    span?.setAttribute(
+      "mu2mi.rate_limit.track_processing.consumed_points",
+      rateLimitRes.consumedPoints,
+    );
+    span?.setAttribute(
+      "mu2mi.rate_limit.track_processing.ms_before_next",
+      rateLimitRes.msBeforeNext,
+    );
+    span?.addEvent("track processing rate limit check");
     if (rateLimitRes.remainingPoints === 0) {
       throw errors.TOO_MANY_REQUESTS();
     }
 
     return await next();
   });
+
+Object.defineProperty(rateLimitTrackProcessing, "name", {
+  value: "rateLimitTrackProcessingMiddleware",
+});
 
 export const fileStorageProvider = os.middleware(async ({ next }) => {
   return await next({
