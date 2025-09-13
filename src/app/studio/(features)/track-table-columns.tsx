@@ -400,6 +400,7 @@ function DeleteButton({ track }: { track: UserTrack }) {
           </DialogClose>
           <Button
             variant="destructive"
+            className="mt-2"
             disabled={mutation.isPending}
             onClick={handleDelete}
             data-umami-event={umami.deleteTrack.name}
