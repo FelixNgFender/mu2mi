@@ -94,6 +94,7 @@ export const mimeType = pgEnum("mime_type", [
   "audio/ogg",
   "audio/m4a",
   "application/json",
+  "application/octet-stream",
   "image/png",
   "audio/sp-midi",
   "audio/x-wav",

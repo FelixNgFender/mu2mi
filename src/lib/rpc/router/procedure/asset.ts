@@ -25,7 +25,6 @@ const uploadToFileStorageSchema = z.object({
 });
 
 const uploadToFileStorage = base
-  .use(requiresAuth)
   .use(fileStorageProvider)
   .input(uploadToFileStorageSchema)
   .handler(async ({ context, input }) => {
