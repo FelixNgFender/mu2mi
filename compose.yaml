@@ -24,8 +24,8 @@ services:
     restart: unless-stopped
     command: server /data --console-address :9001
     environment:
-      - MINIO_ROOT_USER=${S3_ACCESS_KEY}
-      - MINIO_ROOT_PASSWORD=${S3_SECRET_KEY}
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=miniosecret
     volumes:
       - minio_data:/data
     ports:
@@ -42,15 +42,10 @@ services:
     container_name: bucket-init
     restart: no
     entrypoint:
-      /bin/sh -c "/usr/bin/mc config host add minio http://minio:9000
-      ${S3_ACCESS_KEY} ${S3_SECRET_KEY}; /usr/bin/mc mb --ignore-existing
-      minio/${S3_BUCKET_NAME}; /usr/bin/mc anonymous set public
-      minio/${S3_BUCKET_NAME}; /usr/bin/mc ilm rule add --expire-days 30
-      minio/${S3_BUCKET_NAME}; exit 0;"
-    environment:
-      - S3_ACCESS_KEY=${S3_ACCESS_KEY}
-      - S3_SECRET_KEY=${S3_SECRET_KEY}
-      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
+      /bin/sh -c "/usr/bin/mc alias set minio http://minio:9000 minio
+      miniosecret; /usr/bin/mc mb --ignore-existing minio/mu2mi-assets;
+      /usr/bin/mc anonymous set public minio/mu2mi-assets; /usr/bin/mc ilm rule
+      add --expire-days 30 minio/mu2mi-assets; exit 0;"
     depends_on:
       - minio
 
