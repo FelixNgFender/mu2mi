@@ -63,6 +63,14 @@ export function MidiForm() {
   const uploadFile = useUploadFile();
   const generatePresignedUrl = useGeneratePresignedUrl({ type: "midi" });
 
+  function handleUnknownError(error: Error) {
+    toast.error("Uh oh! Something went wrong.", {
+      description: error.message,
+    });
+    form.reset();
+    setCurrentStep(-1);
+  }
+
   const transcribeMidi = useMutation(
     browserClient.track.transcribeMidi.mutationOptions({
       onError(error) {
@@ -79,16 +87,11 @@ export function MidiForm() {
           setCurrentStep(-1);
           return;
         }
-        toast.error("Uh oh! Something went wrong.", {
-          description: error.message,
-        });
-        form.reset();
-        setCurrentStep(-1);
+        handleUnknownError(error);
       },
       onSuccess() {
         window.umami?.track(umami.midi.success.name);
         toast("🔥 We are cooking your track.");
-        form.reset();
       },
     }),
   );
@@ -145,16 +148,14 @@ export function MidiForm() {
                 setCurrentStep(-1);
                 return;
               }
-              form.reset();
-              setCurrentStep(-1);
+              handleUnknownError(error);
             },
             onSuccess(presignedUrl) {
               uploadFile.mutate(
                 { url: presignedUrl.url, file },
                 {
-                  onError() {
-                    form.reset();
-                    setCurrentStep(-1);
+                  onError(error) {
+                    handleUnknownError(error);
                   },
                   onSuccess() {
                     // chain to transcribe midi

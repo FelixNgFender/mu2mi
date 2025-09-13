@@ -95,6 +95,14 @@ export function GenerationForm() {
   const uploadFile = useUploadFile();
   const generatePresignedUrl = useGeneratePresignedUrl({ type: "generation" });
 
+  function handleUnknownError(error: Error) {
+    toast.error("Uh oh! Something went wrong.", {
+      description: error.message,
+    });
+    form.reset();
+    setCurrentStep(-1);
+  }
+
   const generateMusic = useMutation(
     browserClient.track.generateMusic.mutationOptions({
       onError(error) {
@@ -111,16 +119,11 @@ export function GenerationForm() {
           setCurrentStep(-1);
           return;
         }
-        toast.error("Uh oh! Something went wrong.", {
-          description: error.message,
-        });
-        form.reset();
-        setCurrentStep(-1);
+        handleUnknownError(error);
       },
       onSuccess() {
         window.umami?.track(umami.generation.success.name);
         toast("🔥 We are cooking your track.");
-        form.reset();
       },
     }),
   );
@@ -184,20 +187,17 @@ export function GenerationForm() {
             setCurrentStep(-1);
             return;
           }
-          setCurrentStep(-1);
-          form.reset();
+          handleUnknownError(error);
         },
         onSuccess(presignedUrl) {
           // chain to upload file
           uploadFile.mutate(
             { url: presignedUrl.url, file: data.file as File }, // guaranteed to be not null because of the guard above
             {
-              onError: () => {
-                // handle upload error
-                setCurrentStep(-1);
-                form.reset();
+              onError(error) {
+                handleUnknownError(error);
               },
-              onSuccess: () => {
+              onSuccess() {
                 // chain to generate music
                 const { file: _, ...rest } = data;
                 generateMusic.mutate({

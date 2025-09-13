@@ -98,6 +98,14 @@ export function SeparationForm() {
   const uploadFile = useUploadFile();
   const generatePresignedUrl = useGeneratePresignedUrl({ type: "separation" });
 
+  function handleUnknownError(error: Error) {
+    toast.error("Uh oh! Something went wrong.", {
+      description: error.message,
+    });
+    form.reset();
+    setCurrentStep(-1);
+  }
+
   const separateTrack = useMutation(
     browserClient.track.separateTrack.mutationOptions({
       onError(error) {
@@ -114,16 +122,11 @@ export function SeparationForm() {
           setCurrentStep(-1);
           return;
         }
-        toast.error("Uh oh! Something went wrong.", {
-          description: error.message,
-        });
-        form.reset();
-        setCurrentStep(-1);
+        handleUnknownError(error);
       },
       onSuccess() {
         window.umami?.track(umami.separation.success.name);
         toast("🔥 We are cooking your track.");
-        form.reset();
       },
     }),
   );
@@ -178,18 +181,15 @@ export function SeparationForm() {
             setCurrentStep(-1);
             return;
           }
-          setCurrentStep(-1);
-          form.reset();
+          handleUnknownError(error);
         },
         onSuccess(presignedUrl) {
           // chain to upload file
           uploadFile.mutate(
             { url: presignedUrl.url, file: data.file },
             {
-              onError() {
-                // handle upload error
-                setCurrentStep(-1);
-                form.reset();
+              onError(error) {
+                handleUnknownError(error);
               },
               onSuccess() {
                 // chain to separate track
