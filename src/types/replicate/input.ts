@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const webhookMetadataSchema = z.object({
-  trackId: z.int(),
+  trackId: z.coerce.number(),
   userId: z.string().min(15).max(15),
 });
 
