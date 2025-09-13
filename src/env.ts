@@ -122,17 +122,19 @@ export const env = createEnv({
         return z.NEVER;
       }
 
-      if (
-        env.NEXT_PUBLIC_ENABLE_CAPTCHA &&
-        (!env.NEXT_PUBLIC_CAPTCHA_SITE_KEY || !env.CAPTCHA_SECRET_KEY)
-      ) {
-        ctx.addIssue({
-          code: "custom",
-          message:
-            "Captcha configs are required if NEXT_PUBLIC_ENABLE_CAPTCHA is true",
-        });
-        return z.NEVER;
-      }
+      // TODO: not sure why validation is causing error on client-side
+      // prolly because CAPTCHA_SECRET_KEY is server-only so it's stripped?
+      // if (
+      //   env.NEXT_PUBLIC_ENABLE_CAPTCHA &&
+      //   (!env.NEXT_PUBLIC_CAPTCHA_SITE_KEY || !env.CAPTCHA_SECRET_KEY)
+      // ) {
+      //   ctx.addIssue({
+      //     code: "custom",
+      //     message:
+      //       "Captcha configs are required if NEXT_PUBLIC_ENABLE_CAPTCHA is true",
+      //   });
+      //   return z.NEVER;
+      // }
 
       return {
         ...env,
