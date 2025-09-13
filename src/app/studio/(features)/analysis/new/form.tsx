@@ -188,8 +188,9 @@ export function AnalysisForm() {
               },
               onSuccess() {
                 // chain to analyze track
+                const { file: _, ...rest } = data;
                 analyzeTrack.mutate({
-                  ...data,
+                  ...rest,
                   name: data.file.name,
                   assetId: presignedUrl.assetId,
                 });

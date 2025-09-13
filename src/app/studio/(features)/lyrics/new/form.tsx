@@ -210,15 +210,16 @@ export function LyricsForm() {
           uploadFile.mutate(
             { url: presignedUrl.url, file: data.file },
             {
-              onError: () => {
+              onError() {
                 // handle upload error
                 setCurrentStep(-1);
                 form.reset();
               },
-              onSuccess: () => {
-                // chain to analyze track
+              onSuccess() {
+                // chain to transcribe lyrics
+                const { file: _, ...rest } = data;
                 transcribeLyrics.mutate({
-                  ...data,
+                  ...rest,
                   name: data.file.name,
                   assetId: presignedUrl.assetId,
                 });

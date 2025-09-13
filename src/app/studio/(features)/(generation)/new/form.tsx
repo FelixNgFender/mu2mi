@@ -199,8 +199,9 @@ export function GenerationForm() {
               },
               onSuccess: () => {
                 // chain to generate music
+                const { file: _, ...rest } = data;
                 generateMusic.mutate({
-                  ...data,
+                  ...rest,
                   name: data.prompt,
                   assetId: presignedUrl.assetId,
                 });

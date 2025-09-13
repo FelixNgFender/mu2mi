@@ -193,8 +193,9 @@ export function SeparationForm() {
               },
               onSuccess() {
                 // chain to separate track
+                const { file: _, ...rest } = data;
                 separateTrack.mutate({
-                  ...data,
+                  ...rest,
                   name: data.file.name,
                   assetId: presignedUrl.assetId,
                 });
