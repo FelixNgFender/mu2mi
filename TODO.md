@@ -1,1 +1,1 @@
-fix redis
+fix css for players
