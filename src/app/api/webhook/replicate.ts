@@ -94,31 +94,25 @@ export const replicateWebhookHandler = async <
     } else if (Array.isArray(output)) {
       await Promise.all(
         output.map(async (url) => {
-          if (url) {
-            const extension = path.extname(url);
-            switch (extension) {
-              case ".json": {
-                await saveAssetAndMetadata(trackId, userId, url, "analysis");
-                break;
-              }
-              case ".png": {
-                await saveAssetAndMetadata(
-                  trackId,
-                  userId,
-                  url,
-                  "analysis_viz",
-                );
-                break;
-              }
-              case ".mp3": {
-                await saveAssetAndMetadata(
-                  trackId,
-                  userId,
-                  url,
-                  "analysis_sonic",
-                );
-                break;
-              }
+          if (!url) return;
+          const extension = path.extname(url);
+          switch (extension) {
+            case ".json": {
+              await saveAssetAndMetadata(trackId, userId, url, "analysis");
+              break;
+            }
+            case ".png": {
+              await saveAssetAndMetadata(trackId, userId, url, "analysis_viz");
+              break;
+            }
+            case ".mp3": {
+              await saveAssetAndMetadata(
+                trackId,
+                userId,
+                url,
+                "analysis_sonic",
+              );
+              break;
             }
           }
         }),
