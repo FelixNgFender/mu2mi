@@ -78,32 +78,40 @@ export const generateMusic = base
         context.env.S3_PRESIGNED_URL_EXPIRATION_S,
       );
 
-      return await context.replicate.generateMusic({
+      const prediction = await context.replicate.generateMusic({
         ...input,
         trackId: newTrack.trackId,
         userId: context.session.user.id,
         input_audio: url,
       });
-    } else {
-      const newTrack = await trackModel.create(context.db, {
-        userId: context.session.user.id,
-        status: "processing",
-        name: input.name,
-        type: "generation",
-      });
 
-      if (!newTrack) {
-        throw errors.INTERNAL_SERVER_ERROR({
-          message: "Failed to create track",
-        });
-      }
+      context.logger.info(
+        { newTrack, url, prediction },
+        "generate music with asset result",
+      );
+      return;
+    }
 
-      return await context.replicate.generateMusic({
-        ...input,
-        trackId: newTrack.id,
-        userId: context.session.user.id,
+    const newTrack = await trackModel.create(context.db, {
+      userId: context.session.user.id,
+      status: "processing",
+      name: input.name,
+      type: "generation",
+    });
+
+    if (!newTrack) {
+      throw errors.INTERNAL_SERVER_ERROR({
+        message: "Failed to create track",
       });
     }
+
+    const prediction = await context.replicate.generateMusic({
+      ...input,
+      trackId: newTrack.id,
+      userId: context.session.user.id,
+    });
+
+    context.logger.info({ newTrack, prediction }, "generate music result");
   });
 
 const analyzeTrackSchema = analysisSchema
@@ -149,12 +157,14 @@ export const analyzeTrack = base
       context.env.S3_PRESIGNED_URL_EXPIRATION_S,
     );
 
-    await context.replicate.analyzeTrack({
+    const prediction = await context.replicate.analyzeTrack({
       ...input,
       trackId: newTrack.trackId,
       userId: context.session.user.id,
       music_input: url,
     });
+
+    context.logger.info({ url, newTrack, prediction }, "analyze track result");
   });
 
 const transcribeLyricsSchema = lyricsSchema
@@ -200,12 +210,17 @@ const transcribeLyrics = base
       context.env.S3_PRESIGNED_URL_EXPIRATION_S,
     );
 
-    await context.replicate.transcribeLyrics({
+    const prediction = await context.replicate.transcribeLyrics({
       ...input,
       trackId: newTrack.trackId,
       userId: context.session.user.id,
       audio: url,
     });
+
+    context.logger.info(
+      { url, newTrack, prediction },
+      "transcribe lyrics result",
+    );
   });
 
 const transcribeMidiSchema = midiSchema
@@ -251,12 +266,17 @@ const transcribeMidi = base
       context.env.S3_PRESIGNED_URL_EXPIRATION_S,
     );
 
-    await context.replicate.transcribeMidi({
+    const prediction = await context.replicate.transcribeMidi({
       ...input,
       trackId: newTrack.trackId,
       userId: context.session.user.id,
       audio_file: url,
     });
+
+    context.logger.info(
+      { url, newTrack, prediction },
+      "transcribe midi result",
+    );
   });
 
 const separateTrackSchema = separationSchema
@@ -302,18 +322,21 @@ const separateTrack = base
       context.env.S3_PRESIGNED_URL_EXPIRATION_S,
     );
 
-    await context.replicate.separateTrack({
+    const prediction = await context.replicate.separateTrack({
       ...input,
       trackId: newTrack.trackId,
       userId: context.session.user.id,
       audio: url,
     });
+
+    context.logger.info({ url, newTrack, prediction }, "separate track result");
   });
 
-const update = os
+const update = base
   .use(dbProvider)
   .input(trackModel.updateSchema)
   .handler(async ({ context, input }) => {
+    context.logger.info({ input }, "updating track");
     await trackModel.update(context.db, input);
   });
 
@@ -335,6 +358,7 @@ const updateUserTrack = base
     if (track.userId !== context.session.user.id) {
       throw errors.UNAUTHORIZED();
     }
+    context.logger.info({ input }, "updating user track");
     await trackModel.update(context.db, input);
   });
 
@@ -355,6 +379,10 @@ const deleteUserTrack = base
       throw errors.UNAUTHORIZED();
     }
 
+    context.logger.info(
+      { trackId: input, assets },
+      "deleting track and related assets",
+    );
     await Promise.all([
       context.fileStorage.removeObjects(
         context.env.S3_BUCKET_NAME,

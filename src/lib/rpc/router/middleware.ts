@@ -20,8 +20,11 @@ export const requiresAuth = base
 
     const span = trace.getActiveSpan();
     span?.setAttribute("mu2mi.user.id", session.user.id);
-    span?.setAttribute("mu2mi.user.email", session.user.email ?? "unknown");
+    span?.setAttribute("mu2mi.user.email", session.user.email);
     span?.addEvent("authenticated user");
+    context.logger = context.logger.child({
+      user: { id: session.user.id, email: session.user.email },
+    });
 
     return await next({
       context: {
@@ -68,10 +71,6 @@ export const rateLimitTrackProcessing = rateLimitContext
     const rateLimitRes = await context.rateLimit.trackProcessing.penalty(
       context.session.user.id,
     );
-    context.logger.info(
-      { rateLimitRes, userId: context.session.user.id },
-      "rate limit status",
-    );
 
     const span = trace.getActiveSpan();
     span?.setAttribute(
@@ -87,6 +86,8 @@ export const rateLimitTrackProcessing = rateLimitContext
       rateLimitRes.msBeforeNext,
     );
     span?.addEvent("track processing rate limit check");
+    context.logger.info({ rateLimitRes }, "track processing rate limit status");
+
     if (rateLimitRes.remainingPoints === 0) {
       throw errors.TOO_MANY_REQUESTS();
     }
