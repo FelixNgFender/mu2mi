@@ -1,0 +1,1 @@
+ALTER TYPE "public"."mime_type" ADD VALUE 'application/octet-stream' BEFORE 'image/png';

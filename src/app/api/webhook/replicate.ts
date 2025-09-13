@@ -161,6 +161,8 @@ const saveAssetAndMetadata = async (
     fileData = Buffer.from(JSON.stringify(data));
   }
 
+  log.info({ objectName, mimeType, size: fileData.length }, "uploading asset");
+
   const { error } = await client.asset.uploadToFileStorage({
     objectName,
     fileData,
