@@ -7,5 +7,5 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function generateObjectKey(extension: string) {
-  return `${crypto.randomBytes(32).toString("hex")}.${extension}`;
+  return `${crypto.randomBytes(32).toString("hex")}${extension}`;
 }
