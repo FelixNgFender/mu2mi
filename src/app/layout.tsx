@@ -87,7 +87,7 @@ export default function RootLayout({
               <main className="flex flex-1 flex-col">{children}</main>
             </div>
             <TailwindIndicator />
-            <Toaster />
+            <Toaster richColors />
           </ThemeProvider>
         </QueryProvider>
         {env.ENABLE_ANALYTICS && (
