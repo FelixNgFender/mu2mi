@@ -51,7 +51,8 @@ export const env = createEnv({
     // file storage
     S3_ENDPOINT: isString.default("localhost"),
     S3_PORT: isNumber.default(9000),
-    S3_USE_SSL: isBoolean.default(false),
+    S3_PUBLIC_ENDPOINT: isString,
+    S3_PUBLIC_PORT: isNumber.default(443),
     S3_ACCESS_KEY: isString.default("minio"),
     S3_SECRET_KEY: isString.default("miniosecret"),
     S3_BUCKET_NAME: isString.default("mu2mi-assets"),

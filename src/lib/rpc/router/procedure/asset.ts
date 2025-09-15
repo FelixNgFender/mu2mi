@@ -6,7 +6,12 @@ import { generateObjectKey } from "@/lib/utils";
 import assetModel from "@/model/asset";
 import trackModel from "@/model/track";
 import { base } from "../context";
-import { dbProvider, fileStorageProvider, requiresAuth } from "../middleware";
+import {
+  dbProvider,
+  fileStorageProvider,
+  publicFileStorageProvider,
+  requiresAuth,
+} from "../middleware";
 
 const create = base
   .use(dbProvider)
@@ -44,7 +49,7 @@ const uploadToFileStorage = base
 const downloadUserTrackAssets = base
   .use(requiresAuth)
   .use(dbProvider)
-  .use(fileStorageProvider)
+  .use(publicFileStorageProvider)
   .input(trackModel.findSchema)
   .errors({
     INTERNAL_SERVER_ERROR: {
@@ -72,7 +77,7 @@ const downloadUserTrackAssets = base
     }
 
     const promises = trackAssets.map(async (asset) => {
-      const url = await context.fileStorage
+      const url = await context.publicFileStorage
         .presignedGetObject(
           context.env.S3_BUCKET_NAME,
           asset.name,
@@ -94,7 +99,7 @@ export type AssetsWithPresignedUrl = InferRouterOutputs<
 
 const downloadPublicTrackAssets = base
   .use(dbProvider)
-  .use(fileStorageProvider)
+  .use(publicFileStorageProvider)
   .input(trackModel.findSchema)
   .errors({
     INTERNAL_SERVER_ERROR: {
@@ -117,7 +122,7 @@ const downloadPublicTrackAssets = base
       throw errors.UNAUTHORIZED();
     }
     const promises = trackAssets.map(async (asset) => {
-      const url = await context.fileStorage
+      const url = await context.publicFileStorage
         .presignedGetObject(
           context.env.S3_BUCKET_NAME,
           asset.name,
@@ -143,7 +148,7 @@ const getPresignedUrlSchema = z.object({
 const generatePresignedUrl = base
   .use(requiresAuth)
   .use(dbProvider)
-  .use(fileStorageProvider)
+  .use(publicFileStorageProvider)
   .input(getPresignedUrlSchema)
   .errors({
     INTERNAL_SERVER_ERROR: {
@@ -155,7 +160,7 @@ const generatePresignedUrl = base
       input.extension = `.${input.extension}`;
     }
     const objectName = generateObjectKey(input.extension);
-    const url = await context.fileStorage.presignedPutObject(
+    const url = await context.publicFileStorage.presignedPutObject(
       context.env.S3_BUCKET_NAME,
       objectName,
       context.env.S3_PRESIGNED_URL_EXPIRATION_S,

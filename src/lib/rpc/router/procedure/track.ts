@@ -14,6 +14,7 @@ import { base } from "../context";
 import {
   dbProvider,
   fileStorageProvider,
+  publicFileStorageProvider,
   rateLimitProvider,
   rateLimitTrackProcessing,
   replicateProvider,
@@ -46,7 +47,7 @@ const generateMusicSchema = generationSchema
 export const generateMusic = base
   .use(requiresAuth)
   .use(dbProvider)
-  .use(fileStorageProvider)
+  .use(publicFileStorageProvider)
   .use(rateLimitProvider)
   .use(rateLimitTrackProcessing)
   .use(replicateProvider)
@@ -72,7 +73,7 @@ export const generateMusic = base
         });
       }
 
-      const url = await context.fileStorage.presignedGetObject(
+      const url = await context.publicFileStorage.presignedGetObject(
         context.env.S3_BUCKET_NAME,
         newTrack.assetName,
         context.env.S3_PRESIGNED_URL_EXPIRATION_S,
@@ -126,7 +127,7 @@ const analyzeTrackSchema = analysisSchema
 export const analyzeTrack = base
   .use(requiresAuth)
   .use(dbProvider)
-  .use(fileStorageProvider)
+  .use(publicFileStorageProvider)
   .use(rateLimitProvider)
   .use(rateLimitTrackProcessing)
   .use(replicateProvider)
@@ -151,7 +152,7 @@ export const analyzeTrack = base
       });
     }
 
-    const url = await context.fileStorage.presignedGetObject(
+    const url = await context.publicFileStorage.presignedGetObject(
       context.env.S3_BUCKET_NAME,
       newTrack.assetName,
       context.env.S3_PRESIGNED_URL_EXPIRATION_S,
@@ -179,7 +180,7 @@ const transcribeLyricsSchema = lyricsSchema
 const transcribeLyrics = base
   .use(requiresAuth)
   .use(dbProvider)
-  .use(fileStorageProvider)
+  .use(publicFileStorageProvider)
   .use(rateLimitProvider)
   .use(rateLimitTrackProcessing)
   .use(replicateProvider)
@@ -204,7 +205,7 @@ const transcribeLyrics = base
       });
     }
 
-    const url = await context.fileStorage.presignedGetObject(
+    const url = await context.publicFileStorage.presignedGetObject(
       context.env.S3_BUCKET_NAME,
       newTrack.assetName,
       context.env.S3_PRESIGNED_URL_EXPIRATION_S,
@@ -235,7 +236,7 @@ const transcribeMidiSchema = midiSchema
 const transcribeMidi = base
   .use(requiresAuth)
   .use(dbProvider)
-  .use(fileStorageProvider)
+  .use(publicFileStorageProvider)
   .use(rateLimitProvider)
   .use(rateLimitTrackProcessing)
   .use(replicateProvider)
@@ -260,7 +261,7 @@ const transcribeMidi = base
       });
     }
 
-    const url = await context.fileStorage.presignedGetObject(
+    const url = await context.publicFileStorage.presignedGetObject(
       context.env.S3_BUCKET_NAME,
       newTrack.assetName,
       context.env.S3_PRESIGNED_URL_EXPIRATION_S,
@@ -291,7 +292,7 @@ const separateTrackSchema = separationSchema
 const separateTrack = base
   .use(requiresAuth)
   .use(dbProvider)
-  .use(fileStorageProvider)
+  .use(publicFileStorageProvider)
   .use(rateLimitProvider)
   .use(rateLimitTrackProcessing)
   .use(replicateProvider)
@@ -316,7 +317,7 @@ const separateTrack = base
       });
     }
 
-    const url = await context.fileStorage.presignedGetObject(
+    const url = await context.publicFileStorage.presignedGetObject(
       context.env.S3_BUCKET_NAME,
       newTrack.assetName,
       context.env.S3_PRESIGNED_URL_EXPIRATION_S,

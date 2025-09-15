@@ -1,6 +1,6 @@
 import { trace } from "@opentelemetry/api";
 import { os } from "@orpc/server";
-import { db, fileStorage, replicate } from "@/infra";
+import { db, fileStorage, publicFileStorage, replicate } from "@/infra";
 import { auth } from "@/lib/auth/server";
 import { httpStatus } from "@/lib/http";
 import { createTrackProcessingRateLimiter } from "@/lib/rate-limit";
@@ -103,6 +103,14 @@ export const fileStorageProvider = os.middleware(async ({ next }) => {
   return await next({
     context: {
       fileStorage,
+    },
+  });
+});
+
+export const publicFileStorageProvider = os.middleware(async ({ next }) => {
+  return await next({
+    context: {
+      publicFileStorage,
     },
   });
 });
