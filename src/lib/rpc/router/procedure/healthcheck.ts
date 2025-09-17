@@ -34,7 +34,7 @@ const execute = base
       s3: `${fileStorageLatency}ms`,
       s3Public: `${publicFileStorageLatency}ms`,
     };
-    context.logger.info({ latency }, "healthcheck");
+    context.logger.debug({ latency }, "healthcheck");
     return latency;
   });
 
