@@ -48,7 +48,6 @@ import {
 import { PresetCard } from "@/components/ui/preset-card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Slider } from "@/components/ui/slider";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   type LYRICS_ALLOWED_MIME_TYPES,
   MIDI_ASSET_CONFIG,
@@ -340,74 +339,47 @@ export function LyricsForm() {
               <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
                 Submit your track
               </h2>
-              <Tabs defaultValue="local" className="flex flex-1 flex-col">
-                <TabsList className="mb-4 self-start">
-                  <TabsTrigger value="local">Local file</TabsTrigger>
-                  <TabsTrigger value="remote">Remote file</TabsTrigger>
-                  <TabsTrigger value="youtube">YouTube</TabsTrigger>
-                </TabsList>
-                <TabsContent
-                  value="local"
-                  className="data-[state=active]:flex data-[state=active]:flex-1 data-[state=active]:flex-col"
-                >
-                  <FormField
-                    name="file"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-1 flex-col items-center gap-y-4">
-                        <FormControl>
-                          <Dropzone
-                            classNameWrapper="w-full flex-1 max-h-64"
-                            className="h-full w-full"
-                            name={field.name}
-                            required
-                            ref={field.ref}
-                            disabled={form.formState.isSubmitting}
-                            aria-disabled={form.formState.isSubmitting}
-                            accept={MIDI_ASSET_CONFIG.allowedMimeTypes.join(
-                              ", ",
-                            )}
-                            dropMessage={
-                              field.value
-                                ? field.value[0]?.name
-                                : "Drop like it's hot 🔥"
-                            }
-                            handleOnDrop={(acceptedFiles: FileList | null) => {
-                              const file = acceptedFiles?.[0] ?? null;
-                              field.onChange(file);
-                              setFile(file);
-                            }}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Supports:
-                          {` ${MIDI_ASSET_CONFIG.allowedFileTypes
-                            .map((type) => type.toUpperCase())
-                            .join(", ")}`}
-                        </FormDescription>
-                        <FormMessage />
-                        {file && (
-                          <audio controls src={URL.createObjectURL(file)}>
-                            <track kind="captions" />
-                          </audio>
-                        )}
-                      </FormItem>
+              <FormField
+                name="file"
+                render={({ field }) => (
+                  <FormItem className="flex flex-1 flex-col items-center gap-y-4">
+                    <FormControl>
+                      <Dropzone
+                        classNameWrapper="w-full flex-1 max-h-64"
+                        className="h-full w-full"
+                        name={field.name}
+                        required
+                        ref={field.ref}
+                        disabled={form.formState.isSubmitting}
+                        aria-disabled={form.formState.isSubmitting}
+                        accept={MIDI_ASSET_CONFIG.allowedMimeTypes.join(", ")}
+                        dropMessage={
+                          field.value
+                            ? field.value[0]?.name
+                            : "Drop like it's hot 🔥"
+                        }
+                        handleOnDrop={(acceptedFiles: FileList | null) => {
+                          const file = acceptedFiles?.[0] ?? null;
+                          field.onChange(file);
+                          setFile(file);
+                        }}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Supports:
+                      {` ${MIDI_ASSET_CONFIG.allowedFileTypes
+                        .map((type) => type.toUpperCase())
+                        .join(", ")}`}
+                    </FormDescription>
+                    <FormMessage />
+                    {file && (
+                      <audio controls src={URL.createObjectURL(file)}>
+                        <track kind="captions" />
+                      </audio>
                     )}
-                  />
-                </TabsContent>
-                {/* TODO: implement */}
-                <TabsContent
-                  value="remote"
-                  className="data-[state=active]:flex data-[state=active]:flex-1 data-[state=active]:flex-col"
-                >
-                  remote
-                </TabsContent>
-                <TabsContent
-                  value="youtube"
-                  className="data-[state=active]:flex data-[state=active]:flex-1 data-[state=active]:flex-col"
-                >
-                  youtube
-                </TabsContent>
-              </Tabs>
+                  </FormItem>
+                )}
+              />
             </motion.div>
           )}
 

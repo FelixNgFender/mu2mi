@@ -33,7 +33,6 @@ Mu2Mi is an open source, AI-powered toolkit for all your musical needs. Remove v
     <a href="https://twitter.com/felixcantcode">Twitter</a>
   </p>
 
-<!-- TODO: Replace with GIF demo -->
 <div align="center"><img src="https://github.com/FelixNgFender/Mu2Mi/raw/main/demo.png" width="80%" ></div>
 
 ## Features
