@@ -11,9 +11,6 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Issues - Mu2Mi](https://img.shields.io/github/issues/FelixNgFender/Mu2Mi)](https://github.com/FelixNgFender/Mu2Mi/issues)
-![GitHub Release](https://img.shields.io/github/v/release/FelixNgFender/Mu2Mi)
-
-![Lint](https://github.com/FelixNgFender/Mu2Mi/actions/workflows/lint.yml/badge.svg)
 
 </div>
 
