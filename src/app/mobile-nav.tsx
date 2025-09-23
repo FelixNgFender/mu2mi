@@ -7,7 +7,12 @@ import * as React from "react";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { siteConfig, studioConfig } from "@/config";
 import { cn } from "@/lib/utils";
 
@@ -55,9 +60,10 @@ export function MobileNav() {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="pr-0">
+        <SheetTitle className="sr-only">Menu</SheetTitle>
         <MobileLink
           href={siteConfig.paths.home}
-          className="flex items-center"
+          className="flex items-center p-4"
           onOpenChange={setOpen}
         >
           <Icons.mu2mi.dark.large className="hidden h-8 w-24 dark:block" />

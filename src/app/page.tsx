@@ -63,15 +63,6 @@ function LandingFooter() {
         </p>
         <p className="text-sm leading-loose text-muted-foreground md:text-right">
           <Link
-            href={siteConfig.links.status}
-            target="_blank"
-            rel="noreferrer"
-            className="font-medium underline underline-offset-4"
-          >
-            Status
-          </Link>
-          {" | "}
-          <Link
             href={siteConfig.paths.legal.privacy}
             className="font-medium underline underline-offset-4"
           >

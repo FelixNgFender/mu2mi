@@ -70,7 +70,6 @@ export const siteConfig = {
   links: {
     github: "https://github.com/FelixNgFender/Mu2Mi" as const,
     twitter: "https://twitter.com/felixcantcode" as const,
-    status: "https://status.mu2mi.com/status/mu2mi" as const,
   },
   twitter: {
     site: "@felixcantcode",
