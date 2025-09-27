@@ -3,7 +3,6 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { siteConfig } from "@/config";
 import { auth } from "@/lib/auth/server";
-import { env } from "./env";
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   if (request.nextUrl.pathname.startsWith(siteConfig.paths.studio.home)) {
@@ -20,5 +19,5 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
-  runtime: env.NEXT_RUNTIME,
+  runtime: "nodejs",
 };
