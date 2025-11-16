@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { siteConfig } from "@/config";
 import { auth } from "@/lib/auth/server";
 
-export async function middleware(request: NextRequest): Promise<NextResponse> {
+export async function proxy(request: NextRequest): Promise<NextResponse> {
   if (request.nextUrl.pathname.startsWith(siteConfig.paths.studio.home)) {
     const session = await auth.api.getSession({ headers: await headers() });
 
@@ -19,7 +19,6 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
-  runtime: "nodejs",
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
