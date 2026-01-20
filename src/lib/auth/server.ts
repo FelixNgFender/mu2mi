@@ -11,6 +11,7 @@ import { logger } from "@/lib/logger";
 const log = logger.child({ module: "lib/auth/server" });
 
 export const auth = betterAuth({
+  trustedOrigins: [siteConfig.url],
   telemetry: {
     enabled: false,
   },
