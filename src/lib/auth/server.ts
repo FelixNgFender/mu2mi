@@ -63,11 +63,13 @@ export const auth = betterAuth({
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,
       overrideUserInfoOnSignIn: true,
+      redirectURI: env.OAUTH_REDIRECT_URI,
     },
     google: {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
       overrideUserInfoOnSignIn: true,
+      redirectURI: env.OAUTH_REDIRECT_URI,
     },
   },
   plugins: [nextCookies()],

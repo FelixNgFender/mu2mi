@@ -36,6 +36,7 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: isString,
     GITHUB_CLIENT_ID: isString,
     GITHUB_CLIENT_SECRET: isString,
+    OAUTH_REDIRECT_URI: isString.optional(),
 
     // email
     ENABLE_EMAIL: isBoolean.default(false),
