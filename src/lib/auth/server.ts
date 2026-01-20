@@ -11,12 +11,12 @@ import { logger } from "@/lib/logger";
 const log = logger.child({ module: "lib/auth/server" });
 
 export const auth = betterAuth({
-  trustedOrigins: [siteConfig.url],
   telemetry: {
     enabled: false,
   },
   appName: siteConfig.name,
   secret: env.BETTER_AUTH_SECRET,
+  baseUrl: env.BASE_URL,
   database: drizzleAdapter(db, {
     provider: "pg",
   }),

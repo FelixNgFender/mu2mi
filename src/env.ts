@@ -137,10 +137,11 @@ export const env = createEnv({
       //   return z.NEVER;
       // }
 
+      const baseUrl = `${env.PROTOCOL}://${env.HOSTNAME}:${env.APP_PORT}`;
       return {
         ...env,
         // derived properties
-        BASE_URL: `${env.PROTOCOL}://${env.HOSTNAME}:${env.APP_PORT}`,
+        BASE_URL: baseUrl,
       };
     }),
 });
