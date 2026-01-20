@@ -142,6 +142,7 @@ export const env = createEnv({
         ...env,
         // derived properties
         BASE_URL: baseUrl,
+        BETTER_AUTH_URL: baseUrl,
       };
     }),
 });
