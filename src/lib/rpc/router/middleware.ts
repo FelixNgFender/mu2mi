@@ -1,4 +1,5 @@
 import { trace } from "@opentelemetry/api";
+import { CONTEXT_LOGGER_SYMBOL, getLogger } from "@orpc/experimental-pino";
 import { os } from "@orpc/server";
 import { db, fileStorage, publicFileStorage, replicate } from "@/infra";
 import { auth } from "@/lib/auth/server";
@@ -22,14 +23,14 @@ export const requiresAuth = base
     span?.setAttribute("mu2mi.user.id", session.user.id);
     span?.setAttribute("mu2mi.user.email", session.user.email);
     span?.addEvent("authenticated user");
-    context.logger = context.logger.child({
-      user: { id: session.user.id, email: session.user.email },
-    });
 
     return await next({
       context: {
         // Pass additional context
         session,
+        [CONTEXT_LOGGER_SYMBOL]: getLogger(context)?.child({
+          user: { id: session.user.id, email: session.user.email },
+        }),
       },
     });
   });
@@ -86,7 +87,10 @@ export const rateLimitTrackProcessing = rateLimitContext
       rateLimitRes.msBeforeNext,
     );
     span?.addEvent("track processing rate limit check");
-    context.logger.info({ rateLimitRes }, "track processing rate limit status");
+    getLogger(context)?.info(
+      { rateLimitRes },
+      "track processing rate limit status",
+    );
 
     if (rateLimitRes.remainingPoints === 0) {
       throw errors.TOO_MANY_REQUESTS();

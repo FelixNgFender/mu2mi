@@ -1,3 +1,4 @@
+import { getLogger } from "@orpc/experimental-pino";
 import { sql } from "drizzle-orm";
 import { env } from "@/env";
 import { base } from "../context";
@@ -34,7 +35,7 @@ const execute = base
       s3: `${fileStorageLatency}ms`,
       s3Public: `${publicFileStorageLatency}ms`,
     };
-    context.logger.debug({ latency }, "healthcheck");
+    getLogger(context)?.debug({ latency }, "healthcheck");
     return latency;
   });
 

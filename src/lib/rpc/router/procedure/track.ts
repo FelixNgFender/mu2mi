@@ -1,3 +1,4 @@
+import { getLogger } from "@orpc/experimental-pino";
 import { os } from "@orpc/server";
 import { httpStatus } from "@/lib/http";
 import assetModel from "@/model/asset";
@@ -86,7 +87,7 @@ export const generateMusic = base
         input_audio: url,
       });
 
-      context.logger.info(
+      getLogger(context)?.info(
         { newTrack, url, prediction },
         "generate music with asset result",
       );
@@ -112,7 +113,7 @@ export const generateMusic = base
       userId: context.session.user.id,
     });
 
-    context.logger.info({ newTrack, prediction }, "generate music result");
+    getLogger(context)?.info({ newTrack, prediction }, "generate music result");
   });
 
 const analyzeTrackSchema = analysisSchema
@@ -165,7 +166,10 @@ export const analyzeTrack = base
       music_input: url,
     });
 
-    context.logger.info({ url, newTrack, prediction }, "analyze track result");
+    getLogger(context)?.info(
+      { url, newTrack, prediction },
+      "analyze track result",
+    );
   });
 
 const transcribeLyricsSchema = lyricsSchema
@@ -218,7 +222,7 @@ const transcribeLyrics = base
       audio: url,
     });
 
-    context.logger.info(
+    getLogger(context)?.info(
       { url, newTrack, prediction },
       "transcribe lyrics result",
     );
@@ -274,7 +278,7 @@ const transcribeMidi = base
       audio_file: url,
     });
 
-    context.logger.info(
+    getLogger(context)?.info(
       { url, newTrack, prediction },
       "transcribe midi result",
     );
@@ -330,14 +334,17 @@ const separateTrack = base
       audio: url,
     });
 
-    context.logger.info({ url, newTrack, prediction }, "separate track result");
+    getLogger(context)?.info(
+      { url, newTrack, prediction },
+      "separate track result",
+    );
   });
 
 const update = base
   .use(dbProvider)
   .input(trackModel.updateSchema)
   .handler(async ({ context, input }) => {
-    context.logger.info({ input }, "updating track");
+    getLogger(context)?.info({ input }, "updating track");
     await trackModel.update(context.db, input);
   });
 
@@ -359,7 +366,7 @@ const updateUserTrack = base
     if (track.userId !== context.session.user.id) {
       throw errors.UNAUTHORIZED();
     }
-    context.logger.info({ input }, "updating user track");
+    getLogger(context)?.info({ input }, "updating user track");
     await trackModel.update(context.db, input);
   });
 
@@ -388,7 +395,7 @@ const deleteUserTrack = base
       trackModel.remove(context.db, input), // cascades to asset table
     ]);
 
-    context.logger.info(
+    getLogger(context)?.info(
       { trackId: input.id, removeObjectsResponse },
       "deleted track and related assets",
     );

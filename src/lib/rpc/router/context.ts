@@ -1,20 +1,18 @@
+import type { LoggerContext } from "@orpc/experimental-pino";
 import { os } from "@orpc/server";
 import { headers } from "next/headers";
-import type { Logger } from "pino";
 import type { RateLimiterPostgres } from "rate-limiter-flexible";
 import { z } from "zod";
 import { env } from "@/env";
 import type { DB } from "@/infra";
 import type { Session } from "@/lib/auth/client";
 import { httpStatus } from "@/lib/http";
-import { logger } from "@/lib/logger";
 
 type ReadonlyHeaders = Awaited<ReturnType<typeof headers>>;
-type BaseContext = {
+interface BaseContext extends LoggerContext {
   headers: ReadonlyHeaders;
   env: typeof env;
-  logger: Logger;
-};
+}
 
 /**
  * Initial context that provides request-indenpendent information to any procedure/middleware that need them.
@@ -38,7 +36,6 @@ export async function createBaseContext(): Promise<BaseContext> {
   return {
     headers: await headers(),
     env,
-    logger: logger.child({ module: "lib/rpc/router/context" }),
   };
 }
 

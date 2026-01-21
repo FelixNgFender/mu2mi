@@ -14,7 +14,9 @@ export const FRESH_TRACK_PROCESSING_RATE_LIMITER_RES = new RateLimiterRes(
   true,
 );
 
-export function createTrackProcessingRateLimiter(db: Pool) {
+export function createTrackProcessingRateLimiter(
+  db: Pool,
+): RateLimiterPostgres {
   return new RateLimiterPostgres({
     storeClient: db,
     tableCreated: true,

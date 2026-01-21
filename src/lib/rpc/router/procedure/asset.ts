@@ -1,3 +1,4 @@
+import { getLogger } from "@orpc/experimental-pino";
 import type { InferRouterOutputs } from "@orpc/server";
 import z from "zod";
 import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE_BYTES } from "@/config/asset";
@@ -16,9 +17,9 @@ import {
 const create = base
   .use(dbProvider)
   .input(assetModel.createSchema)
-  .handler(async ({ input, context }) => {
+  .handler(async ({ context, input }) => {
     const createdAsset = await assetModel.create(context.db, input);
-    context.logger.info({ createdAsset }, "created asset");
+    getLogger(context)?.info({ createdAsset }, "created asset");
     return createdAsset;
   });
 
@@ -43,7 +44,10 @@ const uploadToFileStorage = base
       },
     );
 
-    context.logger.info({ uploadedObjectInfo }, "uploaded to file storage");
+    getLogger(context)?.info(
+      { uploadedObjectInfo },
+      "uploaded to file storage",
+    );
   });
 
 const downloadUserTrackAssets = base
@@ -89,7 +93,7 @@ const downloadUserTrackAssets = base
       return { id: asset.id, url, type: asset.type };
     });
     const assets = await Promise.all(promises);
-    context.logger.info({ assets }, "downloaded user track assets");
+    getLogger(context)?.info({ assets }, "downloaded user track assets");
     return assets;
   });
 
@@ -134,7 +138,7 @@ const downloadPublicTrackAssets = base
       return { id: asset.id, url, type: asset.type };
     });
     const assets = await Promise.all(promises);
-    context.logger.info({ assets }, "downloaded public track assets");
+    getLogger(context)?.info({ assets }, "downloaded public track assets");
     return assets;
   });
 
@@ -179,7 +183,7 @@ const generatePresignedUrl = base
       throw errors.INTERNAL_SERVER_ERROR();
     }
 
-    context.logger.info(
+    getLogger(context)?.info(
       { newAsset, url },
       "created presigned url for new asset",
     );

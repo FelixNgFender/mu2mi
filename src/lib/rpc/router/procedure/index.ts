@@ -1,3 +1,4 @@
+import { getLogger } from "@orpc/experimental-pino";
 import { onError } from "@orpc/server";
 import { base } from "../context";
 import asset from "./asset";
@@ -9,7 +10,7 @@ import user from "./user";
 export default base
   .use(
     onError((error, { context }) => {
-      context.logger.error(error, "rpc error");
+      getLogger(context)?.error(error, "rpc error");
     }),
   )
   .router({
