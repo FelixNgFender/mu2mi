@@ -1,3 +1,4 @@
 [tools]
+aws-cli = { version = "latest", symlink_bins = "true" }
 node = "latest"
 pnpm = "latest"
