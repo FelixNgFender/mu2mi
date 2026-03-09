@@ -79,8 +79,8 @@ is orchestrated with Docker Compose. To set up your development environment:
    `.env.example` file as a template and fill out the values required. The
    `.env.example` file has some default values that you can use. Rate limiting,
    captcha, email, and analytics are disabled by default in development. You can
-   view the [environment variable schema](src/config/env.ts) to see which are
-   required for booting up the Next.js server.
+   view the [environment variable schema](src/env.ts) to see which are required
+   for booting up the Next.js server.
 
 ```bash
 cp .env.example .env
@@ -119,24 +119,3 @@ Once the tunnels are set up, update these variables in your `.env`:
 - `S3_USE_SSL` to `true` for `https` connection
 
 You may also need to restart the Next.js server to apply the changes.
-
-### Codebase Overview
-
-#### Data Access Layer
-
-Exported functions in the `src/models` directory are ready to be consumed in
-Route Handlers, Server Actions, and Server Components. They act as a data access
-layer and interact with the database.
-
-#### Data Fetching and Mutation
-
-Server Components get their data from queries in `queries.ts` files, re-export
-queries from `actions.ts` to get them inside the `'use server'` boundary, which
-enables the use of `useQuery` and `useMutation` hooks in Client Components.
-Route Handlers should be wrapped with `withErrorHandling` in
-[the error module](src/lib/error.ts) to handle errors.
-
-Server Actions in `actions.ts` files. Server Actions should be wrapped with
-either `action` or `authAction` in
-[the safe-action module](src/lib/safe-action.ts) to handle errors and add the
-current user and session to the context.
