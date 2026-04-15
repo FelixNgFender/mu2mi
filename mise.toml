@@ -1,4 +1,5 @@
 [tools]
 aws-cli = { version = "latest", symlink_bins = "true" }
 node = "latest"
+"npm:sync-dotenv" = "latest"
 pnpm = "latest"
