@@ -24,13 +24,17 @@ export default function SignUpEmail({ url }: SignUpEmailProps) {
       <Preview>Your verification link for {siteConfig.name}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={heading}>Your email verification link for {siteConfig.name}</Heading>
+          <Heading style={heading}>
+            Your email verification link for {siteConfig.name}
+          </Heading>
           <Section style={buttonContainer}>
             <Button style={button} href={url}>
               Verify your email
             </Button>
           </Section>
-          <Text style={paragraph}>This link will only be valid for the next 1 hour.</Text>
+          <Text style={paragraph}>
+            This link will only be valid for the next 1 hour.
+          </Text>
           <Hr style={hr} />
           <Link href={siteConfig.url} style={reportLink}>
             {siteConfig.name}

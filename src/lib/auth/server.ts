@@ -23,8 +23,8 @@ export const auth = betterAuth({
   },
   advanced: {
     ipAddress: {
-      // Tell it to look at the standard forwarded header provided by Railway's edge
-      ipAddressHeaders: ["x-forwarded-for"],
+      // Railway's edge does not send x-forwarded-for; it puts the client IP in x-real-ip
+      ipAddressHeaders: ["x-real-ip"],
     },
   },
   database: drizzleAdapter(db, {

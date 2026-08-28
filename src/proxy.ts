@@ -5,14 +5,13 @@ import { siteConfig } from "@/config";
 import { auth } from "@/lib/auth/server";
 
 export async function proxy(request: NextRequest): Promise<NextResponse> {
-  const { logger } = await import("@/lib/logger");
-  const log = logger.child({ module: "proxy" });
-  log.info({ xff: request.headers.get("x-forwarded-for") }, "xff");
   if (request.nextUrl.pathname.startsWith(siteConfig.paths.studio.home)) {
     const session = await auth.api.getSession({ headers: await headers() });
 
     if (!session) {
-      return NextResponse.redirect(new URL(siteConfig.paths.auth.signIn, request.url));
+      return NextResponse.redirect(
+        new URL(siteConfig.paths.auth.signIn, request.url),
+      );
     }
   }
 
