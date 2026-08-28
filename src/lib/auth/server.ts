@@ -21,6 +21,12 @@ export const auth = betterAuth({
     allowedHosts: [`localhost:${env.APP_PORT}`, env.HOSTNAME],
     protocol: process.env.NODE_ENV === "development" ? "http" : "https",
   },
+  advanced: {
+    ipAddress: {
+      // Tell it to look at the standard forwarded header provided by Railway's edge
+      ipAddressHeaders: ["x-forwarded-for"],
+    },
+  },
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
