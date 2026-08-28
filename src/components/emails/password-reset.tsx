@@ -10,7 +10,7 @@ import {
   Preview,
   Section,
   Text,
-} from "@react-email/components";
+} from "react-email";
 import { siteConfig } from "@/config";
 
 interface PasswordResetEmailProps {
@@ -24,17 +24,13 @@ export default function PasswordResetEmail({ url }: PasswordResetEmailProps) {
       <Preview>Your password reset link for {siteConfig.name}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={heading}>
-            Your password reset link for {siteConfig.name}
-          </Heading>
+          <Heading style={heading}>Your password reset link for {siteConfig.name}</Heading>
           <Section style={buttonContainer}>
             <Button style={button} href={url}>
               Reset your password
             </Button>
           </Section>
-          <Text style={paragraph}>
-            This link will only be valid for the next 1 hour.
-          </Text>
+          <Text style={paragraph}>This link will only be valid for the next 1 hour.</Text>
           <Hr style={hr} />
           <Link href={siteConfig.url} style={reportLink}>
             {siteConfig.name}
