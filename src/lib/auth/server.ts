@@ -18,7 +18,7 @@ export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
   trustedOrigins: [siteConfig.url],
   baseURL: {
-    allowedHosts: [`localhost:${env.APP_PORT}`, env.BETTER_AUTH_URL],
+    allowedHosts: [`localhost:${env.APP_PORT}`, env.HOSTNAME],
     protocol: process.env.NODE_ENV === "development" ? "http" : "https",
   },
   database: drizzleAdapter(db, {
