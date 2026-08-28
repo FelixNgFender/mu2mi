@@ -1,0 +1,12 @@
+allowBuilds:
+  core-js: true
+  es5-ext: true
+  esbuild: true
+  libpq: true
+  protobufjs: true
+  sharp: true
+  unrs-resolver: true
+
+overrides:
+  "@types/react": "19.2.14"
+  "@types/react-dom": "19.2.3"
