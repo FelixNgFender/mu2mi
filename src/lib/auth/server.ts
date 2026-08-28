@@ -86,19 +86,20 @@ export const auth = betterAuth({
   logger: {
     level: env.BETTER_AUTH_LOG_LEVEL,
     log: (level, message, ...args) => {
-      // route through our logger
+      const details = args.length === 1 ? args[0] : { args };
+
       switch (level) {
         case "error":
-          log.error(args, message);
+          args.length === 0 ? log.error(message) : log.error(details, message);
           break;
         case "warn":
-          log.warn(args, message);
+          args.length === 0 ? log.warn(message) : log.warn(details, message);
           break;
         case "info":
-          log.info(args, message);
+          args.length === 0 ? log.info(message) : log.info(details, message);
           break;
         case "debug":
-          log.debug(args, message);
+          args.length === 0 ? log.debug(message) : log.debug(details, message);
           break;
       }
     },

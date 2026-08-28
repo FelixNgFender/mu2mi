@@ -9,6 +9,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 const cascadingUpdateAndDelete = {
@@ -54,6 +55,7 @@ export const account = pgTable(
   "account",
   {
     id: text().primaryKey(),
+    issuer: text().notNull(),
     accountId: text().notNull(),
     providerId: text().notNull(),
     accessToken: text(),
@@ -68,7 +70,13 @@ export const account = pgTable(
       .references(() => user.id, cascadingUpdateAndDelete),
     ...updateAndCreatedAt,
   },
-  (table) => [index().on(table.userId)],
+  (table) => [
+    index().on(table.userId),
+    uniqueIndex("account_issuer_account_id_unique").on(
+      table.issuer,
+      table.accountId,
+    ),
+  ],
 );
 
 export const verification = pgTable(
