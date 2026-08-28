@@ -15,6 +15,9 @@ export const env = createEnv({
     NEXT_MANUAL_SIG_HANDLE: isBoolean.default(true),
     NEXT_TELEMETRY_DISABLED: isBoolean.default(true),
     NEXT_RUNTIME: z.enum(["nodejs"]).default("nodejs"),
+    // Optional base URL of a CDN used to serve/cache static assets.
+    // Read by `assetPrefix` in next.config.ts.
+    CDN_ASSET_PREFIX: isString.optional(),
     PROTOCOL: z.enum(["http", "https"]).default("http"),
     HOSTNAME: isString.default("localhost"),
     APP_PORT: isNumber.default(3000),
