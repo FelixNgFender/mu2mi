@@ -29,6 +29,7 @@ export const env = createEnv({
 
     // authentication
     BETTER_AUTH_SECRET: isString,
+    BETTER_AUTH_SECRET_V2: isString,
     BETTER_AUTH_LOG_LEVEL: z
       .enum(["info", "warn", "error", "debug"])
       .default("info"),

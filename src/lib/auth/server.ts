@@ -14,8 +14,11 @@ export const auth = betterAuth({
   telemetry: {
     enabled: false,
   },
+  secrets: [
+    { version: 2, value: env.BETTER_AUTH_SECRET_V2 },
+    { version: 1, value: env.BETTER_AUTH_SECRET },
+  ],
   appName: siteConfig.name,
-  secret: env.BETTER_AUTH_SECRET,
   trustedOrigins: [siteConfig.url],
   baseURL: {
     allowedHosts: [`localhost:${env.APP_PORT}`, env.HOSTNAME],
